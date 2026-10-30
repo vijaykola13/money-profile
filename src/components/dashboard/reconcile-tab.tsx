@@ -14,6 +14,7 @@ import {
   type Saved,
 } from "@/lib/reconcile";
 import { logEvent } from "@/lib/audit";
+import { ProgressBar } from "@/components/charts";
 import { useData } from "@/lib/data-store";
 import { DriveImportButton } from "./google-controls";
 import { Card, CardTitle, usd } from "./ui";
@@ -269,6 +270,9 @@ export function ReconcileTab() {
           <div className="flex justify-between"><dt className="text-gray-500">Statement ending</dt><dd className="font-semibold text-ink">{Number.isFinite(ending) ? usd(ending, 2) : "—"}</dd></div>
           <div className="flex justify-between"><dt className="text-gray-500">Ticked</dt><dd className="font-semibold text-ink">{ticked.size} of {rows.length}</dd></div>
         </dl>
+        <div className="mt-4">
+          <ProgressBar value={ticked.size} max={rows.length} tone={ok ? "#10B981" : "#FF6B35"} label="Transactions ticked" />
+        </div>
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" onClick={checkAll} disabled={!rows.length || !!finished} className="inline-flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-50 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand">
             <CheckCheck className="size-4" aria-hidden="true" /> {allTicked ? "Uncheck all" : "Check all"}

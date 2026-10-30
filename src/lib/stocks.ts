@@ -108,6 +108,10 @@ export function useStocks(enabled = true) {
 
   React.useEffect(() => {
     if (!enabled) {
+      setSymbol(null);
+      setData(sampleStocks());
+      setError("");
+      setNotice("");
       setLoading(false);
       return;
     }

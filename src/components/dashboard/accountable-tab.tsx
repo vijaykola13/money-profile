@@ -1,6 +1,7 @@
 import * as React from "react";
 import { CheckCircle2, Download, FileUp, FlaskConical, Search, TriangleAlert } from "lucide-react";
 import { accountable, type Bucket, type Choice, type Plan, type Row } from "@/lib/accountable";
+import { BarsLine, Donut } from "@/components/charts";
 import { useData } from "@/lib/data-store";
 import { DriveImportButton } from "./google-controls";
 import { Card, CardTitle, usd } from "./ui";
@@ -116,6 +117,20 @@ export function AccountableTab() {
       return next;
     });
 
+  const byBucket = BUCKETS.map((b) => ({
+    label: b,
+    value: summary.buckets[b],
+    color: b === "Home office" ? "#3B82F6" : b === "Company car" ? "#FF6B35" : "#10B981",
+  }));
+  const monthly = React.useMemo(() => {
+    const totals = new Map<string, number>();
+    for (const r of rows) if (r.eligible) totals.set(r.date.slice(0, 7), (totals.get(r.date.slice(0, 7)) ?? 0) + r.reimbursable);
+    const keys = [...totals.keys()].sort();
+    return {
+      labels: keys.map((k) => new Date(k + "-01T00:00:00Z").toLocaleDateString("en-US", { month: "short", timeZone: "UTC" })),
+      values: keys.map((k) => Math.round(totals.get(k) ?? 0)),
+    };
+  }, [rows]);
   const pctOf = (b: Bucket) => (b === "Home office" ? plan.homeOffice : b === "Company car" ? plan.companyCar : plan.medical);
   const full = score && score.matched === score.rows && score.mismatches.length === 0;
 
@@ -139,6 +154,19 @@ export function AccountableTab() {
           </div>
         ))}
       </div>
+
+      {rows.length > 0 && (
+        <>
+          <Card className="md:col-span-1 lg:col-span-5">
+            <CardTitle hint="Share of the total by bucket">Reimbursable split</CardTitle>
+            <Donut slices={byBucket} centerTop={usd(summary.total)} centerBottom="reimbursable" size={150} thickness={18} format={(n) => usd(n)} />
+          </Card>
+          <Card className="md:col-span-1 lg:col-span-7">
+            <CardTitle hint="What each month adds up to">Reimbursable by month</CardTitle>
+            <BarsLine labels={monthly.labels} bars={monthly.values} barLabel="Reimbursable" color="#10B981" height={170} />
+          </Card>
+        </>
+      )}
 
       <Card className="lg:col-span-4">
         <CardTitle hint="US Bank CSV: Date, Transaction, Name, Memo, Amount">Statement file</CardTitle>

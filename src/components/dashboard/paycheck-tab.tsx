@@ -80,12 +80,12 @@ function SmoothingChart({ months, income, paycheckAmt, pots }: { months: string[
             <div key={t} className="absolute inset-x-0 border-t border-gray-100" style={{ top: `${y(t)}%` }} />
           ))}
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible" role="img" aria-label="Monthly income, steady paycheck and holding pot balance">
-            <path d={smooth(incomePts)} fill="none" stroke="#18181b" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 2" vectorEffect="non-scaling-stroke" />
+            <path d={smooth(incomePts)} fill="none" stroke="var(--chart-ink)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 2" vectorEffect="non-scaling-stroke" />
             <path d={smooth(potPts)} fill="none" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
             <path d={smooth(payPts)} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {[
-            { P: incomePts, vals: income, color: "#18181b", name: "Income" },
+            { P: incomePts, vals: income, color: "var(--chart-ink)", name: "Income" },
             { P: potPts, vals: pots, color: "#FF6B35", name: "Pot" },
           ].flatMap(({ P: pp, vals, color, name }) =>
             pp.map(([px, py], i) => (

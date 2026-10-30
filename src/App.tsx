@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Moon, Navigation, Sun, X } from "lucide-react";
 import { AccountableTab } from "@/components/dashboard/accountable-tab";
 import { ActivityTable } from "@/components/dashboard/activity-table";
 import { BalanceCard } from "@/components/dashboard/balance-card";
@@ -20,6 +21,7 @@ import { Card } from "@/components/dashboard/ui";
 import { useData, type Mode } from "@/lib/data-store";
 import { buildModel } from "@/lib/model";
 import { useStocks } from "@/lib/stocks";
+import { useTheme } from "@/lib/theme";
 
 type TabId =
   | "home" | "import" | "reconcile" | "paycheck" | "taxplan" | "accountable" | "quickbooks" | "report"
@@ -82,6 +84,7 @@ function LiveNotice({ title, body, onConnections }: { title: string; body: strin
 
 export default function App() {
   const data = useData();
+  const theme = useTheme();
   const live = data.mode === "live";
   const stocks = useStocks(live);
   const model = React.useMemo(() => buildModel(data.plaid), [data.plaid]);
@@ -112,6 +115,13 @@ export default function App() {
     go(next);
   };
 
+  const { notice, dismissNotice } = data;
+  React.useEffect(() => {
+    if (!notice) return;
+    const id = window.setTimeout(dismissNotice, 9000);
+    return () => window.clearTimeout(id);
+  }, [notice, dismissNotice]);
+
   const tabs = live ? LIVE_TABS : FILE_TABS;
   const dot = (state: "live" | "loading" | "sample" | "off") =>
     ({ live: "bg-emerald-500", loading: "animate-pulse bg-brand", sample: "bg-brand", off: "bg-gray-300" })[state];
@@ -127,16 +137,32 @@ export default function App() {
           : { state: "live", text: src.kind === "live" ? src.label : `File: ${src.label}` };
 
   return (
-    <div className="min-h-screen bg-canvas px-4 py-8 font-sans text-ink print:bg-white print:py-2 sm:px-6">
+    <div className="min-h-screen bg-canvas bg-[radial-gradient(ellipse_at_top_right,rgba(255,107,53,0.12),transparent_55%),radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.08),transparent_50%)] px-4 py-8 font-sans text-ink transition-colors print:bg-white print:bg-none print:py-2 sm:px-6">
       <div className="mx-auto max-w-[1320px]">
         <header className="mb-6 print:mb-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight">Money Profile</h1>
-              <p className="mt-1 text-sm font-medium text-gray-500">Reconcile your accounts, pay yourself a steady paycheck, and set tax aside.</p>
+            <div className="flex items-center gap-4">
+              <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 text-white shadow-card" aria-hidden="true">
+                <Navigation className="size-7 -rotate-12 fill-white" />
+              </span>
+              <div>
+                <h1 className="text-4xl font-bold leading-none tracking-tight">
+                  Cash<span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">Pilot</span>
+                </h1>
+                <p className="mt-1.5 text-sm font-semibold text-gray-500">Your money. Your next move.</p>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 print:hidden">
               <AccountMenu />
+              <button
+                type="button"
+                onClick={theme.toggle}
+                aria-label={theme.dark ? "Switch to day mode" : "Switch to night mode"}
+                title={theme.dark ? "Day mode" : "Night mode"}
+                className="grid size-10 place-items-center rounded-full bg-white text-gray-500 shadow-card transition hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              >
+                {theme.dark ? <Sun className="size-5" aria-hidden="true" /> : <Moon className="size-5" aria-hidden="true" />}
+              </button>
               <div className="flex flex-wrap gap-2" role="status">
               <span className="inline-flex max-w-[320px] items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-card">
                 <span className={`size-2 shrink-0 rounded-full ${dot(bankPending ? "loading" : sourceChip.state)}`} />
@@ -176,6 +202,15 @@ export default function App() {
           </fieldset>
         </header>
 
+        {notice && (
+          <div role="status" className="mb-4 flex items-start justify-between gap-3 rounded-2xl bg-orange-50 px-4 py-3 text-sm font-semibold text-brand print:hidden">
+            <span>{notice}</span>
+            <button type="button" onClick={dismissNotice} aria-label="Dismiss" className="shrink-0 rounded-lg p-0.5 hover:bg-orange-100/50 focus-visible:outline-2 focus-visible:outline-brand">
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
         <nav className="mb-6 flex max-w-full gap-1 overflow-x-auto rounded-full bg-white p-1 shadow-card print:hidden" role="tablist" aria-label="Sections">
           {tabs.map((t) => (
             <button
@@ -193,7 +228,7 @@ export default function App() {
           ))}
         </nav>
 
-        <div role="tabpanel">
+        <div role="tabpanel" key={tab} className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
           {tab === "home" && <HomeTab go={(t) => go(t as TabId)} />}
           {tab === "import" && <ImportTab />}
           {tab === "reconcile" && <ReconcileTab />}

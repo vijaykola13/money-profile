@@ -6,6 +6,7 @@ import { useData } from "@/lib/data-store";
 import { importer as I, loadLearned } from "@/lib/importer";
 import { loadLog } from "@/lib/quickbooks";
 import { loadSaved } from "@/lib/reconcile";
+import { Donut } from "@/components/charts";
 import { Card, CardTitle, pct, usd } from "./ui";
 
 const fmtDate = (iso: string) =>
@@ -80,6 +81,18 @@ export function ReportTab() {
         <Row k="Business spending (tagged)" v={usd(books.tags.business, 2)} />
         <Row k="Personal spending (tagged)" v={usd(books.tags.personal, 2)} />
         <Row k="Monthly income swing" v={pct(books.incomeSwing * 100, 0)} />
+        <div className="mt-4">
+          <Donut
+            slices={[
+              { label: "Business", value: books.tags.business, color: "#3B82F6" },
+              { label: "Personal", value: books.tags.personal, color: "#FF6B35" },
+            ]}
+            centerTop={usd(books.tags.business + books.tags.personal)}
+            centerBottom="spending"
+            size={130}
+            thickness={16}
+          />
+        </div>
       </Card>
 
       <Card className={`lg:col-span-6 ${section}`}>

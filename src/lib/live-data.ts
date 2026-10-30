@@ -53,6 +53,8 @@ export function useBankData(enabled = true) {
 
   React.useEffect(() => {
     if (!enabled) {
+      setPlaid(null);
+      setMessage("");
       setStatus("off");
       setLoading(false);
       return;

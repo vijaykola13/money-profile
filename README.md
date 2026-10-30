@@ -1,4 +1,6 @@
-# Money Profile
+# CashPilot
+
+**Your money. Your next move.**
 
 Steady pay for irregular income. Bring in a bank statement and the app reconciles it, sorts business from
 personal, pays you a steady paycheck from a holding pot, sets tax aside, plans quarterly tax payments, tracks

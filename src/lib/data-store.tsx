@@ -1,10 +1,11 @@
 import { scopedStorage } from "@/lib/storage";
 import * as React from "react";
 import { dataset } from "@/lib/dataset";
-import { logEvent } from "@/lib/audit";
+import { clearAudit, logEvent } from "@/lib/audit";
 import { importer as I, loadMapping } from "@/lib/importer";
 import { useBankData, type Account, type PlaidPayload } from "@/lib/live-data";
-import type { Txn } from "@/lib/reconcile";
+import { saveLog } from "@/lib/quickbooks";
+import { clearSaved, type Txn } from "@/lib/reconcile";
 
 /** Where the user's transactions come from. The choice is theirs, and is remembered. */
 export type Mode = "files" | "live";
@@ -42,6 +43,9 @@ interface Ctx {
   ingestRaw: (text: string, label: string, kind?: "file" | "sample") => Promise<IngestResult>;
   loadSample: () => Promise<IngestResult>;
   clear: () => void;
+  /** Said once after a switch that wiped the previous data. */
+  notice: string;
+  dismissNotice: () => void;
 }
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -70,6 +74,21 @@ function write(key: string, value: unknown) {
   }
 }
 
+/**
+ * Wipes everything that belongs to the loaded data: the file, reconciliation progress, export log and activity trail.
+ * Preferences stay (data source choice, taught merchant tags, saved column mappings, theme).
+ */
+function clearWorkspace() {
+  try {
+    scopedStorage.removeItem(DATA_KEY);
+  } catch {
+    /* ignore */
+  }
+  clearSaved();
+  saveLog([]);
+  clearAudit();
+}
+
 function build(kind: Source["kind"], label: string, transactions: Txn[]): Source {
   return { kind, label, transactions, csv: transactions.length ? dataset.toCanonicalCsv(transactions) : "" };
 }
@@ -90,14 +109,30 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return build("live", `Live: Plaid ${plaid.env ?? "sandbox"}`, txns);
   }, [mode, plaid]);
 
-  // In live mode only live data is shown; uploaded files stay stored for when the user switches back.
+  // In live mode only live data is shown.
   const source = mode === "live" ? (live ?? EMPTY) : stored;
 
+  const [notice, setNotice] = React.useState("");
+  const modeRef = React.useRef(mode);
+  modeRef.current = mode;
+
+  // Switching between uploading and a live connection starts clean: nothing from the other source carries over.
   const setMode = React.useCallback((m: Mode) => {
+    if (m === modeRef.current) return;
+    clearWorkspace();
+    setStored(EMPTY);
+    modeRef.current = m;
     setModeState(m);
     write(MODE_KEY, m);
-    logEvent("data", m === "live" ? "Switched to a live connection" : "Switched to uploaded files");
+    logEvent("data", m === "live" ? "Switched to a live connection; previous data cleared" : "Switched to uploaded files; previous data cleared");
+    setNotice(
+      m === "live"
+        ? "Switched to live data. Your uploaded file and working data were cleared."
+        : "Switched to uploaded files. Live data was cleared; load a statement to begin.",
+    );
   }, []);
+
+  const dismissNotice = React.useCallback(() => setNotice(""), []);
 
   const publish = React.useCallback<Ctx["publish"]>((transactions, label, kind) => {
     const next = build(kind, label, transactions);
@@ -142,18 +177,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }, [ingestRaw]);
 
   const clear = React.useCallback(() => {
+    clearWorkspace();
     setStored(EMPTY);
-    try {
-      scopedStorage.removeItem(DATA_KEY);
-    } catch {
-      /* ignore */
-    }
     logEvent("data", "Cleared the loaded data");
   }, []);
 
   const value = React.useMemo<Ctx>(
-    () => ({ mode, setMode, source, plaid, bankLoading, bankStatus, bankMessage, accounts: plaid?.accounts ?? [], publish, ingestRaw, loadSample, clear }),
-    [mode, setMode, source, plaid, bankLoading, bankStatus, bankMessage, publish, ingestRaw, loadSample, clear],
+    () => ({ mode, setMode, source, plaid, bankLoading, bankStatus, bankMessage, accounts: plaid?.accounts ?? [], publish, ingestRaw, loadSample, clear, notice, dismissNotice }),
+    [mode, setMode, source, plaid, bankLoading, bankStatus, bankMessage, publish, ingestRaw, loadSample, clear, notice, dismissNotice],
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

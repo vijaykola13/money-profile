@@ -81,7 +81,7 @@ export function IncomeChart({ model }: { model: Model }) {
               <path
                 d={smooth(lossPts)}
                 fill="none"
-                stroke="#18181b"
+                stroke="var(--chart-ink)"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeDasharray="4 2"
@@ -91,7 +91,7 @@ export function IncomeChart({ model }: { model: Model }) {
 
             {[
               { pts: profitPts, vals: profit, color: "#3b82f6", name: "Profit" },
-              { pts: lossPts, vals: loss, color: "#18181b", name: "Loss" },
+              { pts: lossPts, vals: loss, color: "var(--chart-ink)", name: "Loss" },
             ].flatMap(({ pts: P, vals, color, name }) =>
               P.map(([px, py], i) => (
                 <button

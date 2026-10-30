@@ -69,7 +69,7 @@ function BankCard({ name, balance, tone }: { name: string; balance: number | nul
   return (
     <div
       className={`relative flex h-[170px] w-[280px] shrink-0 snap-start flex-col justify-between rounded-3xl p-5 text-white shadow-card ${
-        tone === "dark" ? "bg-zinc-950" : "bg-gradient-to-br from-orange-500 to-orange-400"
+        tone === "dark" ? "bg-[#18181b]" : "bg-gradient-to-br from-orange-500 to-orange-400"
       }`}
     >
       <div className="flex items-center justify-between">

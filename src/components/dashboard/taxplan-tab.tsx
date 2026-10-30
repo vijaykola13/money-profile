@@ -3,6 +3,7 @@ import { CalendarClock, Landmark, Scale, Wallet } from "lucide-react";
 import { computeBooks, taxplanApi } from "@/lib/books";
 import { useData } from "@/lib/data-store";
 import { loadLearned } from "@/lib/importer";
+import { ProgressBar } from "@/components/charts";
 import { Card, CardTitle, pct, usd } from "./ui";
 
 const fmtDate = (iso: string) =>
@@ -120,8 +121,17 @@ export function TaxPlanTab() {
                   <td className="py-3 text-gray-500">{q.covers}</td>
                   <td className="whitespace-nowrap py-3 text-ink">{fmtDate(q.due)}</td>
                   <td className="py-3 font-bold text-ink">{usd(q.amountDue)}</td>
-                  <td className="py-3 text-ink">
-                    {q.status === "No data yet" ? "—" : `${usd(q.setAside)} of ${usd(q.cumulativeRequired)}`}
+                  <td className="min-w-[170px] py-3 text-ink">
+                    {q.status === "No data yet" ? (
+                      "—"
+                    ) : (
+                      <>
+                        {usd(q.setAside)} of {usd(q.cumulativeRequired)}
+                        <div className="mt-1.5">
+                          <ProgressBar value={q.setAside} max={q.cumulativeRequired} tone={q.gap > 0 ? "#EF4444" : "#10B981"} label={`${q.id} set-aside progress`} />
+                        </div>
+                      </>
+                    )}
                   </td>
                   <td className="py-3">
                     <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${TONE[q.status]}`}>
