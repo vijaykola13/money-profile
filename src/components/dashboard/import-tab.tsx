@@ -16,6 +16,7 @@ import {
 } from "@/lib/importer";
 import { logEvent } from "@/lib/audit";
 import { useData } from "@/lib/data-store";
+import { DriveImportButton } from "./google-controls";
 import { Card, CardTitle, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -204,6 +205,7 @@ export function ImportTab() {
             <FileUp className="size-4" aria-hidden="true" /> Upload CSV
             <input type="file" accept=".csv,text/csv" className="sr-only" onChange={(e) => void onFile(e.target.files?.[0])} />
           </label>
+          <DriveImportButton onText={(text, name) => ingest(text, name)} />
           <button type="button" onClick={() => void loadSample(true)} className="inline-flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-3 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-brand">
             <FlaskConical className="size-4" aria-hidden="true" /> Demo: messy export
           </button>

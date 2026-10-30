@@ -61,11 +61,6 @@ export function ReconcileTab() {
   const [filter, setFilter] = React.useState<(typeof FILTERS)[number]>("All");
   const [shown, setShown] = React.useState(PAGE);
 
-  // In live mode the linked account's balance can stand in for the statement ending balance.
-  const bankBalance =
-    data.mode === "live" && data.accounts.length
-      ? data.accounts.filter((a) => a.type === "depository").reduce((s, a) => s + (a.balance ?? 0), 0)
-      : null;
   const starting = num(startText);
   const ending = num(endText);
   const ready = Number.isFinite(starting) && Number.isFinite(ending) && rows.length > 0;
@@ -225,11 +220,6 @@ export function ReconcileTab() {
           </Field>
           <Field label="Statement ending balance">
             <input inputMode="decimal" placeholder="e.g. 24,310.55" value={endText} onChange={(e) => setEndText(e.target.value)} disabled={!!finished} className={inputCls} />
-            {bankBalance != null && !finished && (
-              <button type="button" onClick={() => setEndText(bankBalance.toFixed(2))} className="mt-2 text-xs font-semibold text-brand underline">
-                Use live bank balance ({usd(bankBalance, 2)})
-              </button>
-            )}
           </Field>
         </div>
       </Card>

@@ -1,3 +1,4 @@
+import { scopedStorage } from "@/lib/storage";
 import * as React from "react";
 import { dataset } from "@/lib/dataset";
 import { logEvent } from "@/lib/audit";
@@ -53,7 +54,7 @@ const DataContext = React.createContext<Ctx | null>(null);
 
 function read<T>(key: string): T | null {
   try {
-    const raw = window.localStorage.getItem(key);
+    const raw = scopedStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : null;
   } catch {
     return null;
@@ -63,7 +64,7 @@ function read<T>(key: string): T | null {
 function write(key: string, value: unknown) {
   try {
     const text = JSON.stringify(value);
-    if (text.length <= MAX_PERSIST) window.localStorage.setItem(key, text);
+    if (text.length <= MAX_PERSIST) scopedStorage.setItem(key, text);
   } catch {
     /* storage unavailable or full: the data lasts for this visit only */
   }
@@ -89,7 +90,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return build("live", `Live: Plaid ${plaid.env ?? "sandbox"}`, txns);
   }, [mode, plaid]);
 
-  const source = live ?? stored;
+  // In live mode only live data is shown; uploaded files stay stored for when the user switches back.
+  const source = mode === "live" ? (live ?? EMPTY) : stored;
 
   const setMode = React.useCallback((m: Mode) => {
     setModeState(m);
@@ -142,7 +144,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const clear = React.useCallback(() => {
     setStored(EMPTY);
     try {
-      window.localStorage.removeItem(DATA_KEY);
+      scopedStorage.removeItem(DATA_KEY);
     } catch {
       /* ignore */
     }

@@ -147,8 +147,15 @@ export function QuickbooksTab() {
       </div>
 
       <Card className="lg:col-span-4">
-        <CardTitle hint="A bank CSV; the saved Import mapping is reused">Source</CardTitle>
-        <p className="mb-3 truncate text-sm font-semibold text-ink" title={fileName}>{fileName || "No file loaded"}</p>
+        <CardTitle hint={data.mode === "live" ? "Transactions from your linked bank" : "A bank CSV; the saved Import mapping is reused"}>Source</CardTitle>
+        <p className="mb-3 truncate text-sm font-semibold text-ink" title={fileName}>{fileName || (data.mode === "live" ? "No bank linked" : "No file loaded")}</p>
+        {data.mode === "live" ? (
+          <p className="rounded-2xl bg-gray-50 p-3 text-xs font-medium text-gray-500">
+            {data.source.kind === "live"
+              ? "Using your linked bank. Reload the page to pull fresh transactions."
+              : "No bank is linked yet. Connect one in Connections to export its transactions."}
+          </p>
+        ) : (
         <div className="flex flex-wrap gap-2">
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-brand">
             <FileUp className="size-4" aria-hidden="true" /> Upload CSV
@@ -161,6 +168,7 @@ export function QuickbooksTab() {
             <FlaskConical className="size-4" aria-hidden="true" /> Demo: messy export
           </button>
         </div>
+        )}
         {error && <p role="alert" className="mt-3 text-sm font-semibold text-red-500">{error}</p>}
         {issues.map((n) => (
           <p key={n} className="mt-3 rounded-2xl bg-orange-50 p-3 text-xs font-semibold text-brand">{n}</p>
@@ -257,7 +265,7 @@ export function QuickbooksTab() {
                   <td className="py-3 text-xs font-semibold text-gray-500">{t.tag}</td>
                 </tr>
               ))}
-              {!inScope.length && <tr><td colSpan={5} className="py-10 text-center text-gray-400">{txns.length ? "No transactions in this scope." : "Load a bank file to begin."}</td></tr>}
+              {!inScope.length && <tr><td colSpan={5} className="py-10 text-center text-gray-400">{txns.length ? "No transactions in this scope." : data.mode === "live" ? "Link a bank in Connections to begin." : "Load a bank file to begin."}</td></tr>}
             </tbody>
           </table>
         </div>

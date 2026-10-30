@@ -5,6 +5,7 @@ import { useData } from "@/lib/data-store";
 import { loadLearned } from "@/lib/importer";
 import { loadLog } from "@/lib/quickbooks";
 import { loadSaved } from "@/lib/reconcile";
+import { DriveImportButton } from "./google-controls";
 import { Card, CardTitle, pct, usd } from "./ui";
 
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -72,6 +73,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             {upload}
+            <DriveImportButton />
             <button type="button" onClick={() => void loadSample()} className="inline-flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-brand">
               <FlaskConical className="size-4" aria-hidden="true" /> Try the sample statement
             </button>
@@ -119,6 +121,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
           </div>
           <div className="flex flex-wrap gap-2">
             {upload}
+            <DriveImportButton />
             {data.source.kind !== "live" && (
               <button type="button" onClick={data.clear} className="inline-flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-brand">
                 <Trash2 className="size-4" aria-hidden="true" /> Clear my data

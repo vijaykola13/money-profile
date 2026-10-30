@@ -1,3 +1,4 @@
+import { scopedStorage } from "@/lib/storage";
 // A small activity trail kept in this browser: what was imported, changed and finished, and when.
 // It feeds the accountant report. It never leaves the device.
 
@@ -14,7 +15,7 @@ const MAX = 200;
 
 export function loadAudit(): AuditEvent[] {
   try {
-    const raw = JSON.parse(window.localStorage.getItem(STORE) ?? "[]") as AuditEvent[];
+    const raw = JSON.parse(scopedStorage.getItem(STORE) ?? "[]") as AuditEvent[];
     return Array.isArray(raw) ? raw : [];
   } catch {
     return [];
@@ -24,7 +25,7 @@ export function loadAudit(): AuditEvent[] {
 export function logEvent(type: AuditType, detail: string) {
   try {
     const next = [{ at: new Date().toISOString(), type, detail }, ...loadAudit()].slice(0, MAX);
-    window.localStorage.setItem(STORE, JSON.stringify(next));
+    scopedStorage.setItem(STORE, JSON.stringify(next));
   } catch {
     /* storage unavailable: the trail just won't be kept */
   }
@@ -32,7 +33,7 @@ export function logEvent(type: AuditType, detail: string) {
 
 export function clearAudit() {
   try {
-    window.localStorage.removeItem(STORE);
+    scopedStorage.removeItem(STORE);
   } catch {
     /* ignore */
   }

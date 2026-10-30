@@ -19,12 +19,12 @@ function Row({ k, v }: { k: string; v: string }) {
   );
 }
 
-export function InsightsRow({ model, stock }: { model: Model; stock: StockData }) {
+export function InsightsRow({ model, stock }: { model: Model; stock: StockData | null }) {
   const { profile, tax } = model;
   const cash = model.live ? model.balance : null;
 
   // Uses real orders once a brokerage is connected; otherwise the sample portfolio.
-  const events = engine.detectPanic(stock.bars, stock.trades).filter((e) => e.flagged);
+  const events = stock ? engine.detectPanic(stock.bars, stock.trades).filter((e) => e.flagged) : [];
 
   return (
     <>
@@ -51,7 +51,7 @@ export function InsightsRow({ model, stock }: { model: Model; stock: StockData }
       </Card>
 
       <Card className="lg:col-span-4">
-        <CardTitle hint={stock.live ? `From your ${stock.symbol} orders` : "Sample portfolio until a brokerage is linked"}>
+        <CardTitle hint={!stock ? "No brokerage linked" : stock.live ? `From your ${stock.symbol} orders` : "Sample portfolio until a brokerage is linked"}>
           Panic-sell check
         </CardTitle>
         {events.length ? (
@@ -64,7 +64,7 @@ export function InsightsRow({ model, stock }: { model: Model; stock: StockData }
           ))
         ) : (
           <div className="rounded-2xl border-l-4 border-emerald-500 bg-emerald-50 p-3 text-sm font-medium text-ink">
-            No panic-sell pattern detected.
+            {stock ? "No panic-sell pattern detected." : "Connect a brokerage in Connections to check your trades."}
           </div>
         )}
       </Card>

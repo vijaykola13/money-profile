@@ -15,12 +15,18 @@ import { Sidebar } from "@/components/dashboard/spending-cards";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { StocksTab } from "@/components/dashboard/stocks-tab";
 import { TaxPlanTab } from "@/components/dashboard/taxplan-tab";
+import { AccountMenu } from "@/components/dashboard/google-controls";
+import { Card } from "@/components/dashboard/ui";
 import { useData, type Mode } from "@/lib/data-store";
 import { buildModel } from "@/lib/model";
 import { useStocks } from "@/lib/stocks";
 
-// The freelancer journey is the front door. Live connections are an advanced option the user chooses.
-const FILE_TABS = [
+type TabId =
+  | "home" | "import" | "reconcile" | "paycheck" | "taxplan" | "accountable" | "quickbooks" | "report"
+  | "overview" | "stocks" | "connections";
+
+// The freelancer journey is the front door. These tabs run on an uploaded statement.
+const FILE_TABS: { id: TabId; label: string }[] = [
   { id: "home", label: "Home" },
   { id: "import", label: "Import" },
   { id: "reconcile", label: "Reconcile" },
@@ -29,22 +35,50 @@ const FILE_TABS = [
   { id: "accountable", label: "Accountable plan" },
   { id: "quickbooks", label: "QuickBooks" },
   { id: "report", label: "Report" },
-] as const;
-const LIVE_TABS = [
-  { id: "connections", label: "Connections" },
+];
+
+// Live mode shows only what linked accounts can support, and every one of these runs on live data alone.
+const LIVE_TABS: { id: TabId; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "stocks", label: "Stocks" },
-] as const;
-type TabId = (typeof FILE_TABS)[number]["id"] | (typeof LIVE_TABS)[number]["id"];
+  { id: "quickbooks", label: "QuickBooks" },
+  { id: "connections", label: "Connections" },
+];
 
-const ALL: readonly { id: TabId; label: string }[] = [...FILE_TABS, ...LIVE_TABS];
-const isLiveTab = (t: TabId) => LIVE_TABS.some((x) => x.id === t);
-const fromHash = (): TabId => ALL.find((t) => `#${t.id}` === window.location.hash)?.id ?? "home";
+const LIVE_ONLY: TabId[] = ["overview", "stocks", "connections"];
+const KNOWN = new Set<TabId>([...FILE_TABS, ...LIVE_TABS].map((t) => t.id));
+
+const home = (live: boolean): TabId => (live ? "overview" : "home");
+
+/** Which tab and mode a URL hash means. A live-only link (such as #stocks) turns live mode on. */
+function resolve(hash: string, liveNow: boolean): { tab: TabId; live: boolean } {
+  const id = hash.replace(/^#/, "") as TabId;
+  const known = KNOWN.has(id);
+  const live = (known && LIVE_ONLY.includes(id)) || liveNow;
+  const allowed = known && (live ? LIVE_TABS : FILE_TABS).some((t) => t.id === id);
+  return { tab: allowed ? id : home(live), live };
+}
 
 const MODES: { id: Mode; title: string; body: string; badge?: string }[] = [
   { id: "files", title: "Upload files", body: "Use a bank CSV. Your file stays in this browser." },
-  { id: "live", title: "Connect live", badge: "Advanced", body: "Link a bank and brokerage (sandbox preview) and run the same tools on live data." },
+  { id: "live", title: "Connect live", badge: "Advanced", body: "Link a bank and brokerage (sandbox preview). Shows only what live data can support." },
 ];
+
+function LiveNotice({ title, body, onConnections }: { title: string; body: string; onConnections: () => void }) {
+  return (
+    <Card>
+      <h2 className="text-lg font-semibold text-ink">{title}</h2>
+      <p className="mt-1 text-sm font-medium text-gray-500">{body}</p>
+      <button
+        type="button"
+        onClick={onConnections}
+        className="mt-4 rounded-2xl bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        Open Connections
+      </button>
+    </Card>
+  );
+}
 
 export default function App() {
   const data = useData();
@@ -52,19 +86,20 @@ export default function App() {
   const stocks = useStocks(live);
   const model = React.useMemo(() => buildModel(data.plaid), [data.plaid]);
 
-  const [tab, setTab] = React.useState<TabId>(fromHash);
+  const [tab, setTab] = React.useState<TabId>(() => resolve(window.location.hash, live).tab);
   const go = React.useCallback((t: TabId) => {
     window.location.hash = t === "home" ? "" : t;
     setTab(t);
   }, []);
 
-  // Opening a live-only link (such as #stocks) turns live mode on, so old links keep working.
+  const liveRef = React.useRef(live);
+  liveRef.current = live;
   const { setMode } = data;
   React.useEffect(() => {
     const onHash = () => {
-      const t = fromHash();
-      setTab(t);
-      if (isLiveTab(t)) setMode("live");
+      const r = resolve(window.location.hash, liveRef.current);
+      if (r.live !== liveRef.current) setMode(r.live ? "live" : "files");
+      setTab(r.tab);
     };
     onHash();
     window.addEventListener("hashchange", onHash);
@@ -73,18 +108,23 @@ export default function App() {
 
   const chooseMode = (m: Mode) => {
     data.setMode(m);
-    if (m === "files" && isLiveTab(tab)) go("home");
+    const next = (m === "live" ? LIVE_TABS : FILE_TABS).some((t) => t.id === tab) ? tab : home(m === "live");
+    go(next);
   };
 
-  const tabs = live ? ALL : FILE_TABS;
+  const tabs = live ? LIVE_TABS : FILE_TABS;
   const dot = (state: "live" | "loading" | "sample" | "off") =>
     ({ live: "bg-emerald-500", loading: "animate-pulse bg-brand", sample: "bg-brand", off: "bg-gray-300" })[state];
   const src = data.source;
-  const sourceChip = {
-    state: src.kind === "live" ? "live" : src.kind === "none" ? "off" : src.kind === "sample" ? "sample" : "live",
-    text: src.kind === "none" ? "No data loaded" : src.kind === "sample" ? "Sample data" : src.kind === "live" ? src.label : `File: ${src.label}`,
-  } as const;
-  const bankPending = live && data.bankLoading && src.kind !== "live";
+  const bankPending = live && data.bankStatus === "loading";
+  const sourceChip: { state: "live" | "sample" | "off"; text: string } =
+    live && src.kind !== "live"
+      ? { state: "off", text: "Bank not connected" }
+      : src.kind === "none"
+        ? { state: "off", text: "No data loaded" }
+        : src.kind === "sample"
+          ? { state: "sample", text: "Sample data" }
+          : { state: "live", text: src.kind === "live" ? src.label : `File: ${src.label}` };
 
   return (
     <div className="min-h-screen bg-canvas px-4 py-8 font-sans text-ink print:bg-white print:py-2 sm:px-6">
@@ -95,7 +135,9 @@ export default function App() {
               <h1 className="text-4xl font-bold tracking-tight">Money Profile</h1>
               <p className="mt-1 text-sm font-medium text-gray-500">Reconcile your accounts, pay yourself a steady paycheck, and set tax aside.</p>
             </div>
-            <div className="flex flex-wrap gap-2 print:hidden" role="status">
+            <div className="flex flex-wrap items-center gap-2 print:hidden">
+              <AccountMenu />
+              <div className="flex flex-wrap gap-2" role="status">
               <span className="inline-flex max-w-[320px] items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-card">
                 <span className={`size-2 shrink-0 rounded-full ${dot(bankPending ? "loading" : sourceChip.state)}`} />
                 <span className="truncate">{bankPending ? "Linking bank…" : sourceChip.text}</span>
@@ -106,6 +148,7 @@ export default function App() {
                   {stocks.loading && !stocks.data.live ? "Loading brokerage…" : stocks.data.live ? stocks.data.sourceLabel : "Brokerage not connected"}
                 </span>
               )}
+              </div>
             </div>
           </div>
 
@@ -134,21 +177,19 @@ export default function App() {
         </header>
 
         <nav className="mb-6 flex max-w-full gap-1 overflow-x-auto rounded-full bg-white p-1 shadow-card print:hidden" role="tablist" aria-label="Sections">
-          {tabs.map((t, i) => (
-            <React.Fragment key={t.id}>
-              {live && i === FILE_TABS.length && <span aria-hidden="true" className="mx-1 w-px shrink-0 self-stretch bg-gray-200" />}
-              <button
-                type="button"
-                role="tab"
-                aria-selected={tab === t.id}
-                onClick={() => go(t.id)}
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
-                  tab === t.id ? "bg-zinc-950 text-white" : "text-gray-500 hover:text-ink"
-                }`}
-              >
-                {t.label}
-              </button>
-            </React.Fragment>
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.id}
+              onClick={() => go(t.id)}
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                tab === t.id ? "bg-zinc-950 text-white" : "text-gray-500 hover:text-ink"
+              }`}
+            >
+              {t.label}
+            </button>
           ))}
         </nav>
 
@@ -162,19 +203,37 @@ export default function App() {
           {tab === "quickbooks" && <QuickbooksTab />}
           {tab === "report" && <ReportTab />}
           {tab === "connections" && <ConnectionsTab stocks={stocks} />}
-          {tab === "overview" && (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
-              <BalanceCard model={model} />
-              <StatsGrid model={model} />
-              <IncomeChart model={model} />
-              <InsightsRow model={model} stock={stocks.data} />
-              <Sidebar model={model} />
-              <ActivityTable model={model} />
-            </div>
-          )}
-          {tab === "stocks" && (
-            <StocksTab stocks={stocks.data} loading={stocks.loading} error={stocks.error} notice={stocks.notice} onSymbol={stocks.setSymbol} />
-          )}
+          {tab === "overview" &&
+            (data.bankStatus === "connected" ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
+                <BalanceCard model={model} />
+                <StatsGrid model={model} />
+                <IncomeChart model={model} />
+                <InsightsRow model={model} stock={stocks.data.live ? stocks.data : null} />
+                <Sidebar model={model} />
+                <ActivityTable model={model} />
+              </div>
+            ) : (
+              <LiveNotice
+                title={data.bankStatus === "loading" ? "Linking your bank…" : "Bank not connected"}
+                body={
+                  data.bankStatus === "loading"
+                    ? "This takes a few seconds."
+                    : data.bankMessage || "Overview shows your linked bank's balance, income, spending and activity. Connect a bank to see it."
+                }
+                onConnections={() => go("connections")}
+              />
+            ))}
+          {tab === "stocks" &&
+            (stocks.data.live ? (
+              <StocksTab stocks={stocks.data} loading={stocks.loading} error={stocks.error} notice={stocks.notice} onSymbol={stocks.setSymbol} />
+            ) : (
+              <LiveNotice
+                title={stocks.loading ? "Loading your brokerage…" : "Brokerage not connected"}
+                body={stocks.loading ? "This takes a few seconds." : stocks.error || stocks.notice || "Stocks shows your holdings, price charts and orders. Connect a brokerage to see them."}
+                onConnections={() => go("connections")}
+              />
+            ))}
         </div>
 
         <footer className="mt-8 text-xs font-medium text-gray-400">

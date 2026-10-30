@@ -2,6 +2,8 @@ import * as React from "react";
 import { aiConfigured } from "@/lib/importer";
 import { useData } from "@/lib/data-store";
 import type { useStocks } from "@/lib/stocks";
+import { driveEnabled, signInEnabled } from "@/lib/google";
+import { currentUser } from "@/lib/storage";
 import { Card, usd } from "./ui";
 
 type Stocks = ReturnType<typeof useStocks>;
@@ -74,8 +76,8 @@ export function ConnectionsTab({ stocks }: { stocks: Stocks }) {
         <h2 className="text-lg font-semibold text-ink">Live connections (advanced preview)</h2>
         <p className="mt-1 text-sm font-medium text-gray-500">
           {data.source.kind === "live"
-            ? `Every tab is now running on ${data.source.label}: ${data.source.transactions.length} transactions from the linked bank.`
-            : "Live mode is on, but no bank is linked yet, so the tools keep using your uploaded file. Connect a bank below to switch them to live data."}
+            ? `These tabs run only on live data: ${data.source.label}, ${data.source.transactions.length} transactions.`
+            : "Live mode is on, but no bank is linked yet, so there is nothing to show. Connect a bank below."}
         </p>
         <p className="mt-2 text-xs font-medium text-gray-400">
           These run on sandbox test accounts shared by everyone who opens this site. Per-user connections need sign-in, which is on the roadmap.
@@ -90,7 +92,7 @@ export function ConnectionsTab({ stocks }: { stocks: Stocks }) {
             ? `${data.source.kind === "live" ? data.source.label : "Linked"} · ${depository.length} account${depository.length === 1 ? "" : "s"}`
             : data.bankMessage || "No bank is connected on this site."
         }
-        unlocks="Your bank transactions feed Import, Reconcile, Paycheck, Tax planner, Accountable plan and QuickBooks, and the live balance can fill the reconciliation ending balance."
+        unlocks="The Overview tab (balance, income, spending, cash flow, cards, activity) and the QuickBooks export of your live transactions."
         shares="Read-only transactions and balances from your bank, through Plaid."
         keys={["PLAID_CLIENT_ID", "PLAID_SECRET", "PLAID_ENV"]}
       >
@@ -126,6 +128,21 @@ export function ConnectionsTab({ stocks }: { stocks: Stocks }) {
         unlocks="Better handling of merchants and file layouts the built-in rules have never seen."
         shares="Merchant names for tagging, and the column headers plus the first three rows of a file for mapping."
         keys={["ANTHROPIC_API_KEY"]}
+      />
+
+      <Service
+        name="Google (sign-in and Drive)"
+        state={signInEnabled ? "connected" : "off"}
+        detail={
+          !signInEnabled
+            ? "Not set up on this site."
+            : currentUser()
+              ? `Signed in as ${currentUser()!.email}. Your data is kept separate for this account in this browser.`
+              : `Sign-in is available${driveEnabled ? ", and Drive import is on" : ""}.`
+        }
+        unlocks="Sign in with Google, keep each account's data separate in this browser, and import a statement from Google Drive."
+        shares="Your Google name and email at sign-in. For Drive, only the one file you pick (the drive.file permission)."
+        keys={["VITE_GOOGLE_CLIENT_ID", "VITE_GOOGLE_API_KEY", "GOOGLE_CLIENT_ID"]}
       />
 
       <Service

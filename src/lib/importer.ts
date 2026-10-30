@@ -1,3 +1,4 @@
+import { scopedStorage } from "@/lib/storage";
 import * as core from "../../js/importer.mjs";
 import type { Txn } from "@/lib/reconcile";
 
@@ -54,7 +55,7 @@ const LEARNED_STORE = "import.learned.v1";
 
 export function loadLearned(): Record<string, Tag> {
   try {
-    const raw = JSON.parse(window.localStorage.getItem(LEARNED_STORE) ?? "{}") as Record<string, string>;
+    const raw = JSON.parse(scopedStorage.getItem(LEARNED_STORE) ?? "{}") as Record<string, string>;
     return Object.fromEntries(Object.entries(raw).filter(([, v]) => v === "Business" || v === "Personal")) as Record<string, Tag>;
   } catch {
     return {};
@@ -63,7 +64,7 @@ export function loadLearned(): Record<string, Tag> {
 
 export function saveLearned(learned: Record<string, Tag>) {
   try {
-    window.localStorage.setItem(LEARNED_STORE, JSON.stringify(learned));
+    scopedStorage.setItem(LEARNED_STORE, JSON.stringify(learned));
   } catch {
     /* storage unavailable: corrections apply to this visit only */
   }
@@ -75,7 +76,7 @@ const STORE = "import.mappings.v1";
 
 export function loadMapping(headers: string[]): Mapping | null {
   try {
-    const all = JSON.parse(window.localStorage.getItem(STORE) ?? "{}") as Record<string, Mapping>;
+    const all = JSON.parse(scopedStorage.getItem(STORE) ?? "{}") as Record<string, Mapping>;
     return all[importer.headerKey(headers)] ?? null;
   } catch {
     return null;
@@ -84,9 +85,9 @@ export function loadMapping(headers: string[]): Mapping | null {
 
 export function saveMapping(headers: string[], mapping: Mapping) {
   try {
-    const all = JSON.parse(window.localStorage.getItem(STORE) ?? "{}") as Record<string, Mapping>;
+    const all = JSON.parse(scopedStorage.getItem(STORE) ?? "{}") as Record<string, Mapping>;
     all[importer.headerKey(headers)] = mapping;
-    window.localStorage.setItem(STORE, JSON.stringify(all));
+    scopedStorage.setItem(STORE, JSON.stringify(all));
   } catch {
     /* storage unavailable: the mapping just won't be remembered */
   }

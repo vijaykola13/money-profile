@@ -1,3 +1,4 @@
+import { scopedStorage } from "@/lib/storage";
 import * as core from "../../js/quickbooks.mjs";
 
 export type Layout = "three" | "four";
@@ -40,7 +41,7 @@ const STORE = "quickbooks.log.v1";
 
 export function loadLog(): LogEntry[] {
   try {
-    const raw = JSON.parse(window.localStorage.getItem(STORE) ?? "[]") as LogEntry[];
+    const raw = JSON.parse(scopedStorage.getItem(STORE) ?? "[]") as LogEntry[];
     return Array.isArray(raw) ? raw : [];
   } catch {
     return [];
@@ -49,7 +50,7 @@ export function loadLog(): LogEntry[] {
 
 export function saveLog(entries: LogEntry[]) {
   try {
-    window.localStorage.setItem(STORE, JSON.stringify(entries.slice(0, 50)));
+    scopedStorage.setItem(STORE, JSON.stringify(entries.slice(0, 50)));
   } catch {
     /* storage unavailable: the log lasts for this visit only */
   }

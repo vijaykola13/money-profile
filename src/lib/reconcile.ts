@@ -1,3 +1,4 @@
+import { scopedStorage } from "@/lib/storage";
 import * as core from "../../js/reconcile.mjs";
 
 export type AccountType = "checking" | "credit";
@@ -61,7 +62,7 @@ export const DEFAULT_ACCOUNT: Account = { type: "checking", starting: 10000, asO
 
 export function loadSaved(): Saved {
   try {
-    const raw = window.localStorage.getItem(STORE);
+    const raw = scopedStorage.getItem(STORE);
     if (raw) {
       const s = JSON.parse(raw) as Partial<Saved>;
       if (s.account && Array.isArray(s.lockedKeys) && Array.isArray(s.history)) return s as Saved;
@@ -74,7 +75,7 @@ export function loadSaved(): Saved {
 
 export function save(s: Saved) {
   try {
-    window.localStorage.setItem(STORE, JSON.stringify(s));
+    scopedStorage.setItem(STORE, JSON.stringify(s));
   } catch {
     /* storage unavailable: the session still works, it just won't be remembered */
   }
@@ -82,7 +83,7 @@ export function save(s: Saved) {
 
 export function clearSaved() {
   try {
-    window.localStorage.removeItem(STORE);
+    scopedStorage.removeItem(STORE);
   } catch {
     /* ignore */
   }
