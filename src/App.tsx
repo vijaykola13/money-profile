@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AccountableTab } from "@/components/dashboard/accountable-tab";
 import { ActivityTable } from "@/components/dashboard/activity-table";
+import { ReconcileTab } from "@/components/dashboard/reconcile-tab";
 import { BalanceCard } from "@/components/dashboard/balance-card";
 import { IncomeChart } from "@/components/dashboard/income-chart";
 import { InsightsRow } from "@/components/dashboard/insights-row";
@@ -15,6 +16,7 @@ const TABS = [
   { id: "overview", label: "Overview" },
   { id: "stocks", label: "Stocks" },
   { id: "accountable", label: "Accountable plan" },
+  { id: "reconcile", label: "Reconcile" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 
@@ -90,6 +92,10 @@ export default function App() {
             <InsightsRow model={model} stock={stocks.data} />
             <Sidebar model={model} />
             <ActivityTable model={model} />
+          </div>
+        ) : tab === "reconcile" ? (
+          <div role="tabpanel">
+            <ReconcileTab />
           </div>
         ) : tab === "accountable" ? (
           <div role="tabpanel">
