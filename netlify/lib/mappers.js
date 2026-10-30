@@ -58,4 +58,34 @@ function mapAlpacaOrders(orders, prices) {
   return trades.sort((a, b) => a.day - b.day);
 }
 
-module.exports = { mapPlaidTransactions, mapAlpacaBars, mapAlpacaOrders, expenseCategory };
+const num = (v) => (v == null || v === '' ? null : Number(v));
+
+function mapAlpacaBarsFull(bars) {
+  return bars.map((b) => ({ date: b.t.slice(0, 10), open: b.o, high: b.h, low: b.l, close: b.c, volume: b.v }));
+}
+
+// Alpaca reports percentages as fractions (0.0123 = 1.23%).
+function mapAlpacaPositions(positions) {
+  return positions.map((p) => ({
+    symbol: p.symbol, qty: num(p.qty), avgEntry: num(p.avg_entry_price), price: num(p.current_price),
+    marketValue: num(p.market_value), pl: num(p.unrealized_pl), plPct: num(p.unrealized_plpc), dayPct: num(p.change_today)
+  }));
+}
+
+function mapAlpacaAccount(a) {
+  return { equity: num(a.equity), lastEquity: num(a.last_equity), cash: num(a.cash), buyingPower: num(a.buying_power) };
+}
+
+function mapOrderRows(orders) {
+  return orders
+    .filter((o) => o.filled_at || o.submitted_at)
+    .map((o) => ({
+      date: (o.filled_at || o.submitted_at).slice(0, 10), side: o.side, qty: num(o.filled_qty) || num(o.qty),
+      price: num(o.filled_avg_price), status: o.status, type: o.type
+    }));
+}
+
+module.exports = {
+  mapPlaidTransactions, mapAlpacaBars, mapAlpacaOrders, expenseCategory,
+  mapAlpacaBarsFull, mapAlpacaPositions, mapAlpacaAccount, mapOrderRows
+};

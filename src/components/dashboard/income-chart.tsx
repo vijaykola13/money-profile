@@ -2,7 +2,7 @@ import type { Model } from "@/lib/model";
 import { Card, usd } from "./ui";
 
 /** Catmull-Rom through the points, written as cubic bezier (C) segments for a smooth curve. */
-function smooth(P: [number, number][]) {
+export function smooth(P: [number, number][]) {
   let d = `M${P[0][0]},${P[0][1]}`;
   for (let i = 0; i < P.length - 1; i++) {
     const p0 = P[i - 1] ?? P[i];

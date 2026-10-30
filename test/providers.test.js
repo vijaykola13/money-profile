@@ -48,6 +48,20 @@ test('alpaca: bars and orders map onto the price series', () => {
   ]);
 });
 
+test('alpaca: positions, account, bars and order rows map to numbers', () => {
+  const { mapAlpacaPositions, mapAlpacaAccount, mapAlpacaBarsFull, mapOrderRows } = require('../netlify/lib/mappers');
+  assert.deepEqual(mapAlpacaPositions([{ symbol: 'AAPL', qty: '10', avg_entry_price: '150.5', current_price: '160', market_value: '1600', unrealized_pl: '95', unrealized_plpc: '0.063', change_today: '0.01' }]),
+    [{ symbol: 'AAPL', qty: 10, avgEntry: 150.5, price: 160, marketValue: 1600, pl: 95, plPct: 0.063, dayPct: 0.01 }]);
+  assert.deepEqual(mapAlpacaAccount({ equity: '10000', last_equity: '9900', cash: '2500.5', buying_power: '5000' }),
+    { equity: 10000, lastEquity: 9900, cash: 2500.5, buyingPower: 5000 });
+  assert.deepEqual(mapAlpacaBarsFull([{ t: '2025-06-16T04:00:00Z', o: 1, h: 3, l: 0.5, c: 2, v: 100 }]),
+    [{ date: '2025-06-16', open: 1, high: 3, low: 0.5, close: 2, volume: 100 }]);
+  const rows = mapOrderRows([{ side: 'buy', filled_qty: '5', filled_avg_price: '12.5', filled_at: '2025-06-17T14:00:00Z', status: 'filled', type: 'market' },
+    { side: 'sell', qty: '3', status: 'canceled', type: 'limit' }]);
+  assert.equal(rows.length, 1);
+  assert.deepEqual(rows[0], { date: '2025-06-17', side: 'buy', qty: 5, price: 12.5, status: 'filled', type: 'market' });
+});
+
 test('functions: report not configured when keys are missing', async () => {
   for (const k of ['PLAID_CLIENT_ID', 'PLAID_SECRET', 'ALPACA_KEY_ID', 'ALPACA_SECRET']) delete process.env[k];
   const plaid = await require('../netlify/functions/plaid').handler({});

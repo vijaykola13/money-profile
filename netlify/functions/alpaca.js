@@ -1,6 +1,8 @@
-// Market data and order history via Alpaca. Defaults to the paper-trading account;
+// Market data, positions and order history via Alpaca. Defaults to the paper-trading account;
 // set ALPACA_ENV=live (and live keys) to go to production. Secrets stay server-side.
-const { mapAlpacaBars, mapAlpacaOrders } = require('../lib/mappers');
+const {
+  mapAlpacaBars, mapAlpacaBarsFull, mapAlpacaOrders, mapAlpacaPositions, mapAlpacaAccount, mapOrderRows
+} = require('../lib/mappers');
 
 const TRADING = { paper: 'https://paper-api.alpaca.markets', live: 'https://api.alpaca.markets' };
 const DATA = 'https://data.alpaca.markets';
@@ -15,8 +17,8 @@ exports.handler = async (event) => {
   if (!ALPACA_KEY_ID || !ALPACA_SECRET) return json(200, { configured: false, provider: 'alpaca' });
   if (!TRADING[env]) return json(500, { configured: true, error: `unknown ALPACA_ENV "${env}"` });
 
-  const symbol = ((event.queryStringParameters || {}).symbol || 'SPY').toUpperCase();
-  if (!/^[A-Z.]{1,6}$/.test(symbol)) return json(400, { error: 'invalid symbol' });
+  const requested = ((event.queryStringParameters || {}).symbol || '').toUpperCase();
+  if (requested && !/^[A-Z.]{1,6}$/.test(requested)) return json(400, { error: 'invalid symbol' });
   const headers = { 'APCA-API-KEY-ID': ALPACA_KEY_ID, 'APCA-API-SECRET-KEY': ALPACA_SECRET };
   const get = async url => {
     const res = await fetch(url, { headers });
@@ -26,6 +28,15 @@ exports.handler = async (event) => {
   };
 
   try {
+    const [account, rawPositions] = await Promise.all([
+      get(`${TRADING[env]}/v2/account`),
+      get(`${TRADING[env]}/v2/positions`)
+    ]);
+    const positions = mapAlpacaPositions(rawPositions);
+    // Default to the largest holding, then SPY, so the tab opens on something relevant.
+    const symbol = requested ||
+      (positions.slice().sort((a, b) => (b.marketValue || 0) - (a.marketValue || 0))[0] || {}).symbol || 'SPY';
+
     const end = new Date(Date.now() - 20 * 60 * 1000); // free IEX feed lags recent data
     const start = new Date(end); start.setUTCFullYear(end.getUTCFullYear() - 1);
     let bars = [], token;
@@ -44,7 +55,10 @@ exports.handler = async (event) => {
       status: 'closed', symbols: symbol, limit: '500', direction: 'asc', after: start.toISOString()
     })}`);
     return json(200, {
-      configured: true, provider: 'alpaca', env, symbol, prices, trades: mapAlpacaOrders(orders, prices)
+      configured: true, provider: 'alpaca', env, symbol,
+      prices, bars: mapAlpacaBarsFull(bars),
+      trades: mapAlpacaOrders(orders, prices), orders: mapOrderRows(orders),
+      positions, account: mapAlpacaAccount(account)
     });
   } catch (e) {
     return json(502, { configured: true, provider: 'alpaca', error: e.message });

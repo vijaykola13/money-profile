@@ -1,5 +1,6 @@
-import { engine, getDemo } from "@/lib/engine";
+import { engine } from "@/lib/engine";
 import type { Model } from "@/lib/model";
+import type { StockData } from "@/lib/stocks";
 import { Card, CardTitle, pct, usd } from "./ui";
 
 const BADGE: Record<string, string> = {
@@ -18,13 +19,12 @@ function Row({ k, v }: { k: string; v: string }) {
   );
 }
 
-export function InsightsRow({ model }: { model: Model }) {
+export function InsightsRow({ model, stock }: { model: Model; stock: StockData }) {
   const { profile, tax } = model;
   const cash = model.live ? model.balance : null;
 
-  // Order history comes from a brokerage; until Alpaca is connected, this uses the sample portfolio.
-  const sample = getDemo().personas.find((p) => p.id === "casey")!;
-  const events = engine.detectPanic(getDemo().prices, sample.trades).filter((e) => e.flagged);
+  // Uses real orders once a brokerage is connected; otherwise the sample portfolio.
+  const events = engine.detectPanic(stock.bars, stock.trades).filter((e) => e.flagged);
 
   return (
     <>
@@ -51,7 +51,9 @@ export function InsightsRow({ model }: { model: Model }) {
       </Card>
 
       <Card className="lg:col-span-4">
-        <CardTitle hint="Sample portfolio until a brokerage is linked">Panic-sell check</CardTitle>
+        <CardTitle hint={stock.live ? `From your ${stock.symbol} orders` : "Sample portfolio until a brokerage is linked"}>
+          Panic-sell check
+        </CardTitle>
         {events.length ? (
           events.map((e) => (
             <div key={e.date} className="rounded-2xl border-l-4 border-red-500 bg-red-50 p-3 text-sm font-medium text-ink">
