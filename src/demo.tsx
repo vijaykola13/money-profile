@@ -4,7 +4,7 @@ import * as React from "react";
 import { FinanceBento } from "@/components/ui/finance-bento";
 
 /* Geist + Geist Mono for the demo */
-function useFonts() {
+export function useFonts() {
   React.useEffect(() => {
     const id = "geist-fonts";
     if (document.getElementById(id)) return;
@@ -29,7 +29,7 @@ const history = Array.from({ length: 36 }, (_, i) => {
   };
 });
 
-const data = {
+export const demoData = {
   history,
   payments: [
     { name: "Rent", date: "Nov 1", amount: 1800 },
@@ -53,8 +53,10 @@ const data = {
   stocks: { days: ["Mon", "Tue", "Wed", "Thu", "Fri"], values: [2.1, 1.2, 3.4, 1.9, 4.6] },
 };
 
-const AVATAR =
+export const AVATAR =
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&h=160&q=80";
+
+const data = demoData;
 
 export default function FinanceBentoDemo() {
   useFonts();

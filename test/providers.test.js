@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+// Rows also carry date and name; most tests only care about the ledger fields.
+const strip = rows => rows.map(({ date, name, ...r }) => r);
 const { mapPlaidTransactions, mapAlpacaBars, mapAlpacaOrders } = require('../netlify/lib/mappers');
 
 test('plaid: maps categories, signs and skips transfers', () => {
@@ -11,7 +13,7 @@ test('plaid: maps categories, signs and skips transfers', () => {
     { date: '2025-03-05', amount: 500, personal_finance_category: { primary: 'TRANSFER_OUT', detailed: 'TRANSFER_OUT_SAVINGS' } },
     { date: '2025-03-06', amount: -25, personal_finance_category: { primary: 'GENERAL_MERCHANDISE', detailed: 'X' } }
   ]);
-  assert.deepEqual(rows, [
+  assert.deepEqual(strip(rows), [
     { month: '2025-03', category: 'Salary', type: 'income', amount: 4200 },
     { month: '2025-03', category: 'Rent', type: 'expense', amount: 1500 },
     { month: '2025-03', category: 'Groceries', type: 'expense', amount: 80 },
@@ -24,7 +26,8 @@ test('plaid: paycheck miscategorised as food is still income; card payments are 
     { date: '2025-03-07', amount: -810, name: 'Acme inc payroll ppd id', personal_finance_category: { primary: 'FOOD_AND_DRINK', detailed: 'FOOD_AND_DRINK_RESTAURANT' } },
     { date: '2025-03-14', amount: -2835, name: 'Payment Thank You-Mobile', personal_finance_category: { primary: 'LOAN_PAYMENTS', detailed: 'LOAN_PAYMENTS_CREDIT_CARD_PAYMENT' } }
   ]);
-  assert.deepEqual(rows, [{ month: '2025-03', category: 'Salary', type: 'income', amount: 810 }]);
+  assert.deepEqual(strip(rows), [{ month: '2025-03', category: 'Salary', type: 'income', amount: 810 }]);
+  assert.equal(rows[0].date, '2025-03-07');
 });
 
 test('alpaca: bars and orders map onto the price series', () => {

@@ -13,15 +13,16 @@ function mapPlaidTransactions(added) {
     const detailed = pfc.detailed || '';
     if (SKIP.has(primary) || !t.date) continue;
     const month = t.date.slice(0, 7);
+    const base = { month, date: t.date, name: t.name || '' };
 
     if (primary === 'INCOME' || t.amount < 0) {
       // Test data sometimes files paychecks under other categories, so also match on the payee name.
       if (primary === 'INCOME' || primary === '' || PAYROLL.test(t.name || '')) {
-        rows.push({ month, category: 'Salary', type: 'income', amount: Math.abs(t.amount) });
+        rows.push({ ...base, category: 'Salary', type: 'income', amount: Math.abs(t.amount) });
       }
       continue; // refunds, card payments and other credits are ignored
     }
-    rows.push({ month, category: expenseCategory(primary, detailed), type: 'expense', amount: t.amount });
+    rows.push({ ...base, category: expenseCategory(primary, detailed), type: 'expense', amount: t.amount });
   }
   return rows;
 }

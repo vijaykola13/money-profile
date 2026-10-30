@@ -40,7 +40,7 @@ exports.handler = async () => {
     }
 
     // A new item returns empty pages (NOT_READY, then INITIAL_UPDATE_COMPLETE) before history arrives.
-    let added = [], cursor, hasMore = true, tries = 0;
+    let added = [], accounts = [], cursor, hasMore = true, tries = 0;
     while (hasMore) {
       const page = await plaid(host, '/transactions/sync', { ...auth, access_token: accessToken, cursor, count: 500 });
       if (page.transactions_update_status !== 'HISTORICAL_UPDATE_COMPLETE' && !page.added.length && tries++ < 10) {
@@ -48,9 +48,13 @@ exports.handler = async () => {
         continue;
       }
       added = added.concat(page.added);
+      accounts = page.accounts || accounts;
       cursor = page.next_cursor; hasMore = page.has_more;
     }
-    return json(200, { configured: true, provider: 'plaid', env, transactions: mapPlaidTransactions(added) });
+    return json(200, {
+      configured: true, provider: 'plaid', env, transactions: mapPlaidTransactions(added),
+      accounts: accounts.map(a => ({ name: a.name, type: a.type, subtype: a.subtype, balance: a.balances && a.balances.current }))
+    });
   } catch (e) {
     return json(502, { configured: true, provider: 'plaid', error: e.message });
   }

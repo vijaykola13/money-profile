@@ -323,7 +323,7 @@ function updateGoals(){goals.innerHTML=`<div class="in-c"><div class="row" style
 /* ---- Cash flow: mirrored waves, income above, spending below ---- */
 const flow=$id('flow');
 flow.innerHTML=`${bg(GR.pink)}<div class="in-c">
-  <div class="row" style="justify-content:space-between"><div><div class="ttl">Cash flow</div><div class="muted" style="margin-top:4px">Net <span class="mono" style="color:${ACC}">+$3,240</span> a month</div></div>
+  <div class="row" style="justify-content:space-between"><div><div class="ttl">Cash flow</div><div class="muted" style="margin-top:4px">Net <span class="mono" style="color:${ACC}">${(()=>{const n=data.cashflow.income[0].reduce((a,v,i)=>a+v-data.cashflow.spending[0][i],0)*1000;return (n<0?'−':'+')+money(Math.abs(n))})()}</span> in total</div></div>
     <div class="legend" style="flex-direction:column;gap:4px;align-items:flex-end"><span><i style="background:#fff"></i>Income</span><span><i style="background:#FFD0E6"></i>Spending</span></div></div>
   <svg class="fls" style="position:absolute;left:0;bottom:12px" aria-hidden="true"></svg></div><div class="rim"></div>`;
 const MLAB=data.cashflow.months;
