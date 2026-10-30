@@ -1,0 +1,11 @@
+{
+  "name": "money-profile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Spending profile, 2025 federal tax estimate and panic-sell detection",
+  "scripts": {
+    "generate": "node scripts/generate_data.js",
+    "test": "node --test",
+    "start": "npx --yes serve ."
+  }
+}
