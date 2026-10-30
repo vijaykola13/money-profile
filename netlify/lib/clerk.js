@@ -34,8 +34,9 @@ function makeGuard(env = process.env, verify = verifyToken) {
       const token = bearer(event && event.headers);
       if (!token) return reply(401, { error: 'sign in to use this' });
       try {
-        const { data, errors } = await verify(token, { secretKey });
-        if (errors || !data || !data.sub) return denied(errors && errors[0]);
+        // @clerk/backend returns the token's claims when it is valid and throws when it is not.
+        const claims = await verify(token, { secretKey });
+        if (!claims || !claims.sub) return denied();
       } catch (e) {
         return denied(e);
       }
