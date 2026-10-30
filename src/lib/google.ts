@@ -1,9 +1,6 @@
-// Google sign-in (Google Identity Services) and Drive import (Google Picker with the drive.file scope).
-// Both are off until the public client settings exist, so a site without them looks and works as before.
-//
-// Page settings (public, set at build time): VITE_GOOGLE_CLIENT_ID, and for Drive also VITE_GOOGLE_API_KEY
-// (and optionally VITE_GOOGLE_APP_ID). The server needs GOOGLE_CLIENT_ID to verify sign-ins.
-import { clearSession, saveSession, type SessionUser } from "@/lib/storage";
+// Drive import (Google Picker with the drive.file scope). Sign-in is handled by Clerk (src/lib/auth.ts).
+// Off until the public settings exist (set at build time): VITE_GOOGLE_CLIENT_ID and VITE_GOOGLE_API_KEY,
+// and optionally VITE_GOOGLE_APP_ID.
 
 const env = import.meta.env as Record<string, string | undefined>;
 export const GOOGLE = {
@@ -11,7 +8,6 @@ export const GOOGLE = {
   apiKey: env.VITE_GOOGLE_API_KEY || "",
   appId: env.VITE_GOOGLE_APP_ID || "",
 };
-export const signInEnabled = !!GOOGLE.clientId;
 export const driveEnabled = !!GOOGLE.clientId && !!GOOGLE.apiKey;
 
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -36,43 +32,6 @@ function loadScript(src: string): Promise<void> {
     scripts.set(src, p);
   }
   return p;
-}
-
-/** Draws Google's own sign-in button. `onUser` runs after our server has verified the sign-in. */
-export async function renderSignInButton(host: HTMLElement, onError: (message: string) => void) {
-  await loadScript("https://accounts.google.com/gsi/client");
-  g().accounts.id.initialize({
-    client_id: GOOGLE.clientId,
-    callback: async (response: { credential?: string }) => {
-      try {
-        if (!response.credential) throw new Error("Google didn't return a sign-in.");
-        const res = await fetch("/.netlify/functions/auth-google", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ credential: response.credential }),
-        });
-        const out = (await res.json()) as { configured?: boolean; user?: SessionUser; error?: string };
-        if (out.configured === false) throw new Error("Sign-in isn't set up on the server yet (GOOGLE_CLIENT_ID).");
-        if (!res.ok || !out.user) throw new Error(out.error ?? "Sign-in failed.");
-        saveSession(out.user);
-        window.location.reload(); // storage is scoped to the user when the page loads
-      } catch (e) {
-        onError(e instanceof Error ? e.message : "Sign-in failed.");
-      }
-    },
-  });
-  host.innerHTML = "";
-  g().accounts.id.renderButton(host, { theme: "outline", size: "large", shape: "pill", text: "signin_with" });
-}
-
-export function signOut() {
-  try {
-    g()?.accounts?.id?.disableAutoSelect?.();
-  } catch {
-    /* ignore */
-  }
-  clearSession();
-  window.location.reload();
 }
 
 async function accessToken(): Promise<string> {

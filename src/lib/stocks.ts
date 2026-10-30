@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/auth";
 import * as React from "react";
 import { getDemo, type Trade } from "@/lib/engine";
 
@@ -119,7 +120,7 @@ export function useStocks(enabled = true) {
     setLoading(true);
     setError("");
     setNotice("");
-    fetch(`/.netlify/functions/alpaca${symbol ? `?symbol=${encodeURIComponent(symbol)}` : ""}`)
+    apiFetch(`/.netlify/functions/alpaca${symbol ? `?symbol=${encodeURIComponent(symbol)}` : ""}`)
       .then((r) => r.json() as Promise<AlpacaPayload>)
       .then((p) => {
         if (cancelled) return;

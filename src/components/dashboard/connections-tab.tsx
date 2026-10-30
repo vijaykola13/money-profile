@@ -2,7 +2,8 @@ import * as React from "react";
 import { aiConfigured } from "@/lib/importer";
 import { useData } from "@/lib/data-store";
 import type { useStocks } from "@/lib/stocks";
-import { driveEnabled, signInEnabled } from "@/lib/google";
+import { authEnabled } from "@/lib/auth";
+import { driveEnabled } from "@/lib/google";
 import { currentUser } from "@/lib/storage";
 import { Card, usd } from "./ui";
 
@@ -131,18 +132,27 @@ export function ConnectionsTab({ stocks }: { stocks: Stocks }) {
       />
 
       <Service
-        name="Google (sign-in and Drive)"
-        state={signInEnabled ? "connected" : "off"}
+        name="Sign-in (Clerk)"
+        state={authEnabled ? "connected" : "off"}
         detail={
-          !signInEnabled
-            ? "Not set up on this site."
+          !authEnabled
+            ? "Off: anyone with the link can open the app and its data connections."
             : currentUser()
               ? `Signed in as ${currentUser()!.email}. Your data is kept separate for this account in this browser.`
-              : `Sign-in is available${driveEnabled ? ", and Drive import is on" : ""}.`
+              : "Sign-in is required to open the app."
         }
-        unlocks="Sign in with Google, keep each account's data separate in this browser, and import a statement from Google Drive."
-        shares="Your Google name and email at sign-in. For Drive, only the one file you pick (the drive.file permission)."
-        keys={["VITE_GOOGLE_CLIENT_ID", "VITE_GOOGLE_API_KEY", "GOOGLE_CLIENT_ID"]}
+        unlocks="Email or Google sign-in, a private workspace per account in this browser, and locked server connections (bank, brokerage and AI calls need a signed-in session)."
+        shares="Your name and email with Clerk, the sign-in provider."
+        keys={["VITE_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY"]}
+      />
+
+      <Service
+        name="Google Drive import"
+        state={driveEnabled ? "connected" : "off"}
+        detail={driveEnabled ? "Import a statement straight from your Drive." : "Not set up on this site."}
+        unlocks="Import a CSV or Google Sheet from Google Drive instead of uploading a file."
+        shares="Only the one file you pick (the drive.file permission)."
+        keys={["VITE_GOOGLE_CLIENT_ID", "VITE_GOOGLE_API_KEY"]}
       />
 
       <Service

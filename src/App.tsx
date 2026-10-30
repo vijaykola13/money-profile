@@ -16,7 +16,7 @@ import { Sidebar } from "@/components/dashboard/spending-cards";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { StocksTab } from "@/components/dashboard/stocks-tab";
 import { TaxPlanTab } from "@/components/dashboard/taxplan-tab";
-import { AccountMenu } from "@/components/dashboard/google-controls";
+import { AccountMenu } from "@/components/dashboard/account-menu";
 import { Card } from "@/components/dashboard/ui";
 import { useData, type Mode } from "@/lib/data-store";
 import { buildModel } from "@/lib/model";

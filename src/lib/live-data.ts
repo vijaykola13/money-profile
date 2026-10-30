@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/auth";
 import * as React from "react";
 import type { Txn } from "@/lib/engine";
 
@@ -62,7 +63,7 @@ export function useBankData(enabled = true) {
     let cancelled = false;
     setLoading(true);
     setStatus("loading");
-    fetch("/.netlify/functions/plaid")
+    apiFetch("/.netlify/functions/plaid")
       .then((r) => (r.ok ? (r.json() as Promise<PlaidPayload>) : null))
       .then((p) => {
         if (cancelled) return;

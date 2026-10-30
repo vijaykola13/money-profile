@@ -1,5 +1,6 @@
 // Tags merchants business or personal with a one-line reason, using Claude when ANTHROPIC_API_KEY is set.
 // GET reports whether it is configured. POST { names: string[] } returns { tags: { [name]: { tag, reason } } }.
+const { withAuth } = require('../lib/clerk');
 const { json, configured, callClaude, extractJson, cleanTag, readBody } = require('../lib/ai');
 
 const MAX_NAMES = 120;
@@ -12,7 +13,7 @@ const SYSTEM = [
   'Reply with JSON only, in this shape: {"tags":[{"i":0,"tag":"Business","reason":"..."}]}. Use the same i values you were given.'
 ].join(' ');
 
-exports.handler = async (event) => {
+exports.handler = withAuth(async (event) => {
   if (event.httpMethod === 'GET' || !event.httpMethod) return json(200, { configured: configured(), provider: 'anthropic' });
   if (event.httpMethod !== 'POST') return json(405, { error: 'method not allowed' });
   if (!configured()) return json(200, { configured: false, provider: 'anthropic' });
@@ -38,4 +39,4 @@ exports.handler = async (event) => {
   } catch (e) {
     return json(502, { configured: true, provider: 'anthropic', error: e.message });
   }
-};
+});

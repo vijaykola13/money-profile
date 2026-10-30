@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/auth";
 import { scopedStorage } from "@/lib/storage";
 import * as core from "../../js/importer.mjs";
 import type { Txn } from "@/lib/reconcile";
@@ -97,7 +98,7 @@ export function saveMapping(headers: string[], mapping: Mapping) {
 
 export async function aiConfigured(): Promise<boolean> {
   try {
-    const r = await fetch("/.netlify/functions/ai-tag");
+    const r = await apiFetch("/.netlify/functions/ai-tag");
     return r.ok && ((await r.json()) as { configured?: boolean }).configured === true;
   } catch {
     return false;
@@ -105,7 +106,7 @@ export async function aiConfigured(): Promise<boolean> {
 }
 
 async function post<T>(fn: string, body: unknown): Promise<T> {
-  const r = await fetch(`/.netlify/functions/${fn}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  const r = await apiFetch(`/.netlify/functions/${fn}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
   const out = (await r.json()) as T & { error?: string };
   if (!r.ok || out.error) throw new Error(out.error ?? `Request failed (${r.status})`);
   return out;

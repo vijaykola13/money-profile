@@ -1,5 +1,6 @@
 // Bank data via Plaid. Defaults to the Sandbox environment; set PLAID_ENV=production
 // (and production keys) when going live. Secrets stay server-side.
+const { withAuth } = require('../lib/clerk');
 const { mapPlaidTransactions } = require('../lib/mappers');
 
 const HOSTS = { sandbox: 'https://sandbox.plaid.com', production: 'https://production.plaid.com' };
@@ -17,7 +18,7 @@ async function plaid(host, path, body) {
   return data;
 }
 
-exports.handler = async () => {
+exports.handler = withAuth(async () => {
   const { PLAID_CLIENT_ID, PLAID_SECRET } = process.env;
   const env = process.env.PLAID_ENV || 'sandbox';
   if (!PLAID_CLIENT_ID || !PLAID_SECRET) return json(200, { configured: false, provider: 'plaid' });
@@ -58,4 +59,4 @@ exports.handler = async () => {
   } catch (e) {
     return json(502, { configured: true, provider: 'plaid', error: e.message });
   }
-};
+});

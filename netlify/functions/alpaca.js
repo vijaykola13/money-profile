@@ -1,5 +1,6 @@
 // Market data, positions and order history via Alpaca. Defaults to the paper-trading account;
 // set ALPACA_ENV=live (and live keys) to go to production. Secrets stay server-side.
+const { withAuth } = require('../lib/clerk');
 const {
   mapAlpacaBars, mapAlpacaBarsFull, mapAlpacaOrders, mapAlpacaPositions, mapAlpacaAccount, mapOrderRows
 } = require('../lib/mappers');
@@ -11,7 +12,7 @@ const json = (statusCode, body) => ({
   body: JSON.stringify(body)
 });
 
-exports.handler = async (event) => {
+exports.handler = withAuth(async (event) => {
   const { ALPACA_KEY_ID, ALPACA_SECRET } = process.env;
   const env = process.env.ALPACA_ENV || 'paper';
   if (!ALPACA_KEY_ID || !ALPACA_SECRET) return json(200, { configured: false, provider: 'alpaca' });
@@ -63,4 +64,4 @@ exports.handler = async (event) => {
   } catch (e) {
     return json(502, { configured: true, provider: 'alpaca', error: e.message });
   }
-};
+});

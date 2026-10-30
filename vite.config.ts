@@ -34,6 +34,7 @@ function netlifyFunctions(mode: string): Plugin {
           }
           const out = await nodeRequire(file).handler({
             httpMethod: req.method,
+            headers: req.headers,
             body,
             queryStringParameters: Object.fromEntries(url.searchParams),
           });

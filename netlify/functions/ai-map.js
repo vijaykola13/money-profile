@@ -1,6 +1,7 @@
 // Suggests which CSV column is the date, description, amount (or debit and credit) and balance, using Claude
 // when ANTHROPIC_API_KEY is set. The caller still validates the answer in code before using it.
 // GET reports whether it is configured. POST { headers: string[], sample: string[][] } returns { mapping }.
+const { withAuth } = require('../lib/clerk');
 const { json, configured, callClaude, extractJson, readBody } = require('../lib/ai');
 
 const FIELDS = ['date', 'name', 'amount', 'debit', 'credit', 'balance'];
@@ -13,7 +14,7 @@ const SYSTEM = [
   'Reply with JSON only, for example {"date":"Posted","name":"Description","amount":null,"debit":"Withdrawals","credit":"Deposits","balance":"Running Bal."}.'
 ].join(' ');
 
-exports.handler = async (event) => {
+exports.handler = withAuth(async (event) => {
   if (event.httpMethod === 'GET' || !event.httpMethod) return json(200, { configured: configured(), provider: 'anthropic' });
   if (event.httpMethod !== 'POST') return json(405, { error: 'method not allowed' });
   if (!configured()) return json(200, { configured: false, provider: 'anthropic' });
@@ -37,4 +38,4 @@ exports.handler = async (event) => {
   } catch (e) {
     return json(502, { configured: true, provider: 'anthropic', error: e.message });
   }
-};
+});
