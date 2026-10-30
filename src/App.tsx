@@ -1,4 +1,5 @@
 import * as React from "react";
+import { AccountableTab } from "@/components/dashboard/accountable-tab";
 import { ActivityTable } from "@/components/dashboard/activity-table";
 import { BalanceCard } from "@/components/dashboard/balance-card";
 import { IncomeChart } from "@/components/dashboard/income-chart";
@@ -13,10 +14,11 @@ import { useStocks } from "@/lib/stocks";
 const TABS = [
   { id: "overview", label: "Overview" },
   { id: "stocks", label: "Stocks" },
+  { id: "accountable", label: "Accountable plan" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 
-const fromHash = (): Tab => (window.location.hash === "#stocks" ? "stocks" : "overview");
+const fromHash = (): Tab => TABS.find((t) => `#${t.id}` === window.location.hash)?.id ?? "overview";
 
 export default function App() {
   const { plaid, loading } = useBankData();
@@ -88,6 +90,10 @@ export default function App() {
             <InsightsRow model={model} stock={stocks.data} />
             <Sidebar model={model} />
             <ActivityTable model={model} />
+          </div>
+        ) : tab === "accountable" ? (
+          <div role="tabpanel">
+            <AccountableTab />
           </div>
         ) : (
           <div role="tabpanel">

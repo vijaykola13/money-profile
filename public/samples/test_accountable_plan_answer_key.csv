@@ -1,0 +1,237 @@
+Date,Name,Amount,Category,Plan bucket,Eligible,Business %,Reimbursable amount,Note
+2025-10-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,7625.05,Owner draw / income,-,No,,0.00,
+2025-10-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2025-10-02,DEBIT PURCHASE SCRIPPS CLINIC,-101.22,Doctor visit,Medical,Yes,100%,101.22,
+2025-10-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2025-10-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2025-10-05,DEBIT PURCHASE TARGET 00012345,-364.38,Shopping,-,No,,0.00,
+2025-10-06,WEB AUTHORIZED PMT CITY OF SD WATER,-142.07,Water,Home office,Yes,15%,21.31,
+2025-10-08,DEBIT PURCHASE CVS/PHARMACY #9921,-45.23,Pharmacy front store,-,No,,0.00,"Same pharmacy, no RX marker: toiletries/snacks, not a prescription"
+2025-10-09,DEBIT PURCHASE RALPHS #0123,-208.14,Groceries,-,No,,0.00,
+2025-10-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-281.81,Electric,Home office,Yes,15%,42.27,SDG&E bills gas+electric; test assumes electric-only line
+2025-10-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2025-10-14,DEBIT PURCHASE TRADER JOE S #021,-141.58,Groceries,-,No,,0.00,
+2025-10-15,MOBILE CHECK DEPOSIT,868.74,Client payment,-,No,,0.00,
+2025-10-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2025-10-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2025-10-19,DEBIT PURCHASE CVS/PHARMACY RX #9921,-18.35,Prescription,Medical,Yes,100%,18.35,
+2025-10-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-871.72,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2025-10-23,DEBIT PURCHASE STARBUCKS STORE 08812,-52.25,Dining,-,No,,0.00,
+2025-10-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2025-10-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2025-11-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,1935.40,Owner draw / income,-,No,,0.00,
+2025-11-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2025-11-02,DEBIT PURCHASE TRADER JOE S #021,-211.21,Groceries,-,No,,0.00,
+2025-11-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2025-11-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2025-11-06,WEB AUTHORIZED PMT CITY OF SD WATER,-130.52,Water,Home office,Yes,15%,19.58,
+2025-11-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-135.36,Electric,Home office,Yes,15%,20.30,SDG&E bills gas+electric; test assumes electric-only line
+2025-11-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2025-11-13,DEBIT PURCHASE HOME DEPOT #6672,-180.49,Shopping,-,No,,0.00,
+2025-11-14,DEBIT PURCHASE SCRIPPS CLINIC,-194.57,Doctor visit,Medical,Yes,100%,194.57,
+2025-11-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2025-11-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2025-11-19,DEBIT PURCHASE TRADER JOE S #021,-196.48,Groceries,-,No,,0.00,
+2025-11-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-1642.87,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2025-11-25,DEBIT PURCHASE CVS/PHARMACY RX #9921,-45.54,Prescription,Medical,Yes,100%,45.54,
+2025-11-28,DEBIT PURCHASE THE LINKERY,-122.24,Dining,-,No,,0.00,
+2025-11-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2025-11-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2025-12-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,2297.38,Owner draw / income,-,No,,0.00,
+2025-12-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2025-12-03,DEBIT PURCHASE TARGET 00012345,-348.29,Shopping,-,No,,0.00,
+2025-12-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2025-12-04,DEBIT PURCHASE CVS/PHARMACY RX #9921,-56.47,Prescription,Medical,Yes,100%,56.47,
+2025-12-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2025-12-06,WEB AUTHORIZED PMT CITY OF SD WATER,-139.06,Water,Home office,Yes,15%,20.86,
+2025-12-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-129.18,Electric,Home office,Yes,15%,19.38,SDG&E bills gas+electric; test assumes electric-only line
+2025-12-10,WEB AUTHORIZED PMT SD COUNTY TREASURER,-4875.00,Property tax,-,No,,0.00,Not in plan's home-office list
+2025-12-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2025-12-18,DEBIT PURCHASE TRADER JOE S #021,-192.19,Groceries,-,No,,0.00,
+2025-12-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2025-12-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2025-12-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-1229.13,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2025-12-25,DEBIT PURCHASE SHARP REES-STEALY MED,-85.75,Doctor visit,Medical,Yes,100%,85.75,
+2025-12-26,DEBIT PURCHASE PANERA BREAD #4211,-60.35,Dining,-,No,,0.00,
+2025-12-27,DEBIT PURCHASE RALPHS #0123,-94.25,Groceries,-,No,,0.00,
+2025-12-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2025-12-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-01-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,8563.13,Owner draw / income,-,No,,0.00,
+2026-01-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-01-02,DEBIT PURCHASE RALPHS #0123,-77.86,Groceries,-,No,,0.00,
+2026-01-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-01-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-01-06,DEBIT PURCHASE CVS/PHARMACY RX #9921,-30.00,Prescription,Medical,Yes,100%,30.00,
+2026-01-06,DEBIT PURCHASE WHOLE FOODS MKT 10215,-173.23,Groceries,-,No,,0.00,
+2026-01-06,WEB AUTHORIZED PMT CITY OF SD WATER,-133.93,Water,Home office,Yes,15%,20.09,
+2026-01-09,DEBIT PURCHASE CVS/PHARMACY #9921,-59.86,Pharmacy front store,-,No,,0.00,"Same pharmacy, no RX marker: toiletries/snacks, not a prescription"
+2026-01-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-102.14,Electric,Home office,Yes,15%,15.32,SDG&E bills gas+electric; test assumes electric-only line
+2026-01-10,DEBIT PURCHASE DEL MAR FAMILY DENTISTRY,-584.31,Dentist,Medical,Yes,100%,584.31,
+2026-01-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-01-13,DEBIT PURCHASE CHIPOTLE 1872,-139.48,Dining,-,No,,0.00,
+2026-01-15,MOBILE CHECK DEPOSIT,2257.83,Client payment,-,No,,0.00,
+2026-01-17,DEBIT PURCHASE PANERA BREAD #4211,-136.15,Dining,-,No,,0.00,
+2026-01-17,DEBIT PURCHASE VCA ANIMAL HOSPITAL,-110.91,Veterinarian,-,No,,0.00,"Pet care, not human medical"
+2026-01-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-01-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-01-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-527.56,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-01-28,DEBIT PURCHASE AMAZON MKTPL*2K4L1,-263.30,Shopping,-,No,,0.00,
+2026-01-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-01-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-02-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,11254.39,Owner draw / income,-,No,,0.00,
+2026-02-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-02-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-02-04,DEBIT PURCHASE VONS #2105,-225.96,Groceries,-,No,,0.00,
+2026-02-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-02-06,WEB AUTHORIZED PMT CITY OF SD WATER,-107.60,Water,Home office,Yes,15%,16.14,
+2026-02-07,DEBIT PURCHASE CVS/PHARMACY RX #9921,-45.12,Prescription,Medical,Yes,100%,45.12,
+2026-02-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-109.68,Electric,Home office,Yes,15%,16.45,SDG&E bills gas+electric; test assumes electric-only line
+2026-02-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-02-17,DEBIT PURCHASE COSTCO WHSE #0480,-87.77,Groceries,-,No,,0.00,
+2026-02-18,DEBIT PURCHASE CVS/PHARMACY #9921,-47.62,Pharmacy front store,-,No,,0.00,"Same pharmacy, no RX marker: toiletries/snacks, not a prescription"
+2026-02-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-02-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-02-20,DEBIT PURCHASE HOME DEPOT #6672,-193.34,Shopping,-,No,,0.00,
+2026-02-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-523.39,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-02-25,DEBIT PURCHASE CHIPOTLE 1872,-129.16,Dining,-,No,,0.00,
+2026-02-25,DEBIT PURCHASE THE LINKERY,-78.74,Dining,-,No,,0.00,
+2026-02-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-02-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-03-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,12426.61,Owner draw / income,-,No,,0.00,
+2026-03-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-03-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-03-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-03-06,WEB AUTHORIZED PMT CITY OF SD WATER,-98.83,Water,Home office,Yes,15%,14.82,
+2026-03-09,DEBIT PURCHASE COSTCO WHSE #0480,-232.57,Groceries,-,No,,0.00,
+2026-03-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-107.04,Electric,Home office,Yes,15%,16.06,SDG&E bills gas+electric; test assumes electric-only line
+2026-03-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-03-14,DEBIT PURCHASE TRADER JOE S #021,-244.72,Groceries,-,No,,0.00,
+2026-03-17,DEBIT PURCHASE SCRIPPS CLINIC,-313.84,Doctor visit,Medical,Yes,100%,313.84,
+2026-03-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-03-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-03-20,DEBIT PURCHASE CVS/PHARMACY RX #9921,-81.13,Prescription,Medical,Yes,100%,81.13,
+2026-03-20,ELECTRONIC WITHDRAWAL PROGRESSIVE INS RENEW FEE,-35.00,Company car insurance fee,Company car,Yes,80%,28.00,Policy fee on company car policy
+2026-03-22,DEBIT PURCHASE HOME DEPOT #6672,-174.91,Shopping,-,No,,0.00,
+2026-03-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-1152.24,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-03-23,DEBIT PURCHASE CVS/PHARMACY #9921,-32.71,Pharmacy front store,-,No,,0.00,"Same pharmacy, no RX marker: toiletries/snacks, not a prescription"
+2026-03-23,DEBIT PURCHASE PANERA BREAD #4211,-60.07,Dining,-,No,,0.00,
+2026-03-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-03-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-04-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,2114.58,Owner draw / income,-,No,,0.00,
+2026-04-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-04-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-04-04,DEBIT PURCHASE CVS/PHARMACY RX #9921,-63.67,Prescription,Medical,Yes,100%,63.67,
+2026-04-04,DEBIT PURCHASE SCRIPPS CLINIC,-280.70,Doctor visit,Medical,Yes,100%,280.70,
+2026-04-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-04-06,DEBIT PURCHASE CVS/PHARMACY #9921,-45.61,Pharmacy front store,-,No,,0.00,"Same pharmacy, no RX marker: toiletries/snacks, not a prescription"
+2026-04-06,WEB AUTHORIZED PMT CITY OF SD WATER,-98.02,Water,Home office,Yes,15%,14.70,
+2026-04-09,DEBIT PURCHASE DEL MAR FAMILY DENTISTRY,-459.59,Dentist,Medical,Yes,100%,459.59,
+2026-04-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-106.01,Electric,Home office,Yes,15%,15.90,SDG&E bills gas+electric; test assumes electric-only line
+2026-04-10,WEB AUTHORIZED PMT SD COUNTY TREASURER,-4875.00,Property tax,-,No,,0.00,Not in plan's home-office list
+2026-04-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-04-14,DEBIT PURCHASE REI #48 SAN DIEGO,-330.30,Shopping,-,No,,0.00,
+2026-04-15,MOBILE CHECK DEPOSIT,1635.45,Client payment,-,No,,0.00,
+2026-04-16,DEBIT PURCHASE WHOLE FOODS MKT 10215,-85.94,Groceries,-,No,,0.00,
+2026-04-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-04-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-04-19,DEBIT PURCHASE WHOLE FOODS MKT 10215,-97.24,Groceries,-,No,,0.00,
+2026-04-22,DEBIT PURCHASE STARBUCKS STORE 08812,-54.12,Dining,-,No,,0.00,
+2026-04-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-433.97,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-04-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-04-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-05-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,10730.90,Owner draw / income,-,No,,0.00,
+2026-05-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-05-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-05-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-05-06,WEB AUTHORIZED PMT CITY OF SD WATER,-147.65,Water,Home office,Yes,15%,22.15,
+2026-05-08,DEBIT PURCHASE CVS/PHARMACY RX #9921,-25.89,Prescription,Medical,Yes,100%,25.89,
+2026-05-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-179.67,Electric,Home office,Yes,15%,26.95,SDG&E bills gas+electric; test assumes electric-only line
+2026-05-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-05-15,DEBIT PURCHASE SHARP REES-STEALY MED,-117.99,Doctor visit,Medical,Yes,100%,117.99,
+2026-05-15,MOBILE CHECK DEPOSIT,1929.25,Client payment,-,No,,0.00,
+2026-05-16,DEBIT PURCHASE REI #48 SAN DIEGO,-93.02,Shopping,-,No,,0.00,
+2026-05-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-05-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-05-21,DEBIT PURCHASE COSTCO WHSE #0480,-224.75,Groceries,-,No,,0.00,
+2026-05-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-971.61,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-05-25,DEBIT PURCHASE THE LINKERY,-29.12,Dining,-,No,,0.00,
+2026-05-28,DEBIT PURCHASE COSTCO WHSE #0480,-66.05,Groceries,-,No,,0.00,
+2026-05-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-05-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-06-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,2330.56,Owner draw / income,-,No,,0.00,
+2026-06-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-06-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-06-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-06-06,WEB AUTHORIZED PMT CITY OF SD WATER,-101.07,Water,Home office,Yes,15%,15.16,
+2026-06-07,DEBIT PURCHASE RALPHS #0123,-169.52,Groceries,-,No,,0.00,
+2026-06-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-301.13,Electric,Home office,Yes,15%,45.17,SDG&E bills gas+electric; test assumes electric-only line
+2026-06-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-06-16,DEBIT PURCHASE CVS/PHARMACY RX #9921,-32.82,Prescription,Medical,Yes,100%,32.82,
+2026-06-16,DEBIT PURCHASE TRADER JOE S #021,-85.83,Groceries,-,No,,0.00,
+2026-06-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-06-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-06-19,DEBIT PURCHASE REI #48 SAN DIEGO,-198.54,Shopping,-,No,,0.00,
+2026-06-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-1671.72,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-06-24,DEBIT PURCHASE PANERA BREAD #4211,-14.60,Dining,-,No,,0.00,
+2026-06-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-06-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-07-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,3145.09,Owner draw / income,-,No,,0.00,
+2026-07-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-07-03,DEBIT PURCHASE AMAZON MKTPL*2K4L1,-182.27,Shopping,-,No,,0.00,
+2026-07-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-07-04,DEBIT PURCHASE CVS/PHARMACY #9921,-29.80,Pharmacy front store,-,No,,0.00,"Same pharmacy, no RX marker: toiletries/snacks, not a prescription"
+2026-07-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-07-05,DEBIT PURCHASE IN N OUT BURGER #112,-92.85,Dining,-,No,,0.00,
+2026-07-06,WEB AUTHORIZED PMT CITY OF SD WATER,-129.77,Water,Home office,Yes,15%,19.47,
+2026-07-07,DEBIT PURCHASE VONS #2105,-96.32,Groceries,-,No,,0.00,
+2026-07-09,DEBIT PURCHASE CVS/PHARMACY RX #9921,-41.48,Prescription,Medical,Yes,100%,41.48,
+2026-07-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-281.54,Electric,Home office,Yes,15%,42.23,SDG&E bills gas+electric; test assumes electric-only line
+2026-07-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-07-15,DEBIT PURCHASE PANERA BREAD #4211,-130.56,Dining,-,No,,0.00,
+2026-07-15,MOBILE CHECK DEPOSIT,790.23,Client payment,-,No,,0.00,
+2026-07-17,DEBIT PURCHASE VONS #2105,-245.96,Groceries,-,No,,0.00,
+2026-07-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-07-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-07-20,DEBIT PURCHASE COASTAL SMILES DENTAL,-410.51,Dentist,Medical,Yes,100%,410.51,
+2026-07-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-1897.60,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-07-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-07-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-08-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,7866.30,Owner draw / income,-,No,,0.00,
+2026-08-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-08-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-08-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-08-05,DEBIT PURCHASE VONS #2105,-69.82,Groceries,-,No,,0.00,
+2026-08-06,WEB AUTHORIZED PMT CITY OF SD WATER,-159.19,Water,Home office,Yes,15%,23.88,
+2026-08-09,DEBIT PURCHASE CVS/PHARMACY RX #9921,-38.98,Prescription,Medical,Yes,100%,38.98,
+2026-08-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-318.56,Electric,Home office,Yes,15%,47.78,SDG&E bills gas+electric; test assumes electric-only line
+2026-08-10,DEBIT PURCHASE BEST BUY 00001234,-91.88,Shopping,-,No,,0.00,
+2026-08-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-08-15,MOBILE CHECK DEPOSIT,956.92,Client payment,-,No,,0.00,
+2026-08-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-08-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-08-19,DEBIT PURCHASE UCSD HEALTH PHYS GRP,-211.27,Doctor visit,Medical,Yes,100%,211.27,
+2026-08-19,DEBIT PURCHASE VCA ANIMAL HOSPITAL,-181.79,Veterinarian,-,No,,0.00,"Pet care, not human medical"
+2026-08-22,DEBIT PURCHASE RALPHS #0123,-246.87,Groceries,-,No,,0.00,
+2026-08-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-881.46,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-08-24,DEBIT PURCHASE CHIPOTLE 1872,-27.67,Dining,-,No,,0.00,
+2026-08-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-08-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
+2026-09-01,ELECTRONIC DEPOSIT HARBORLINE CONSULTING LLC,11764.56,Owner draw / income,-,No,,0.00,
+2026-09-01,WEB AUTHORIZED PMT PACIFICA HOME LOANS,-3412.18,Mortgage,Home office,Yes,15%,511.83,Home office: full payment used; real plans usually reimburse interest only
+2026-09-03,DEBIT PURCHASE CVS/PHARMACY RX #9921,-18.74,Prescription,Medical,Yes,100%,18.74,
+2026-09-03,WEB AUTHORIZED PMT RANCHO VISTA HOA,-385.00,HOA dues,-,No,,0.00,Not in plan's home-office list
+2026-09-05,DEBIT PURCHASE 24 HOUR FITNESS,-49.99,Gym,-,No,,0.00,Not a medical expense
+2026-09-06,WEB AUTHORIZED PMT CITY OF SD WATER,-99.85,Water,Home office,Yes,15%,14.98,
+2026-09-09,ELECTRONIC WITHDRAWAL SDGE WEB PAYMENT,-323.47,Electric,Home office,Yes,15%,48.52,SDG&E bills gas+electric; test assumes electric-only line
+2026-09-10,DEBIT PURCHASE SCRIPPS CLINIC,-40.99,Doctor visit,Medical,Yes,100%,40.99,
+2026-09-12,WEB AUTHORIZED PMT COX COMMUNICATIONS,-89.99,Internet,-,No,,0.00,Not in plan's home-office list
+2026-09-14,DEBIT PURCHASE COSTCO WHSE #0480,-47.08,Groceries,-,No,,0.00,
+2026-09-18,ELECTRONIC WITHDRAWAL GEICO AUTO POL 2290,-118.40,Personal car insurance,-,No,,0.00,Spouse's personal car; not the company car
+2026-09-18,ELECTRONIC WITHDRAWAL PROGRESSIVE INS POL 7781,-164.52,Company car insurance,Company car,Yes,80%,131.62,
+2026-09-20,ELECTRONIC WITHDRAWAL PROGRESSIVE INS RENEW FEE,-35.00,Company car insurance fee,Company car,Yes,80%,28.00,Policy fee on company car policy
+2026-09-22,WEB AUTHORIZED PMT CHASE CREDIT CRD,-579.55,Credit card payment,-,No,,0.00,Card payment; underlying charges unknown
+2026-09-23,DEBIT PURCHASE THE LINKERY,-79.56,Dining,-,No,,0.00,
+2026-09-24,DEBIT PURCHASE WHOLE FOODS MKT 10215,-163.61,Groceries,-,No,,0.00,
+2026-09-27,DEBIT PURCHASE HOME DEPOT #6672,-227.62,Shopping,-,No,,0.00,
+2026-09-28,MONTHLY MAINTENANCE FEE,-12.00,Bank fee,-,No,,0.00,
+2026-09-28,MONTHLY MAINTENANCE FEE WAIVED,12.00,Bank fee,-,No,,0.00,
