@@ -61,11 +61,14 @@ export function ReportTab() {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
       <Card className={`md:col-span-2 lg:col-span-12 ${section}`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight text-ink">Accountant report</h2>
-            <p className="mt-1 text-sm font-medium text-gray-500">
-              {data.source.label} · {fmtDate(books.span.first)} to {fmtDate(books.span.last)} · prepared {fmtDate(today)}
-            </p>
+          <div className="flex items-center gap-4">
+            <img src="/brand/logo-emblem.png" alt="" width={56} height={56} className="size-14 shrink-0" />
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-ink">CashPilot accountant report</h2>
+              <p className="mt-1 text-sm font-medium text-gray-500">
+                {data.source.label} · {fmtDate(books.span.first)} to {fmtDate(books.span.last)} · prepared {fmtDate(today)}
+              </p>
+            </div>
           </div>
           <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-2xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 print:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
             <Printer className="size-4" aria-hidden="true" /> Print or save as PDF

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Moon, Navigation, Sun, X } from "lucide-react";
+import { Moon, Sun, X } from "lucide-react";
 import { AccountableTab } from "@/components/dashboard/accountable-tab";
 import { ActivityTable } from "@/components/dashboard/activity-table";
 import { BalanceCard } from "@/components/dashboard/balance-card";
@@ -142,14 +142,10 @@ export default function App() {
         <header className="mb-6 print:mb-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div className="flex items-center gap-4">
-              <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 text-white shadow-card" aria-hidden="true">
-                <Navigation className="size-7 -rotate-12 fill-white" />
-              </span>
+              <img src="/brand/logo-emblem.png" alt="CashPilot logo" width={64} height={64} className="size-16 shrink-0 drop-shadow-md" />
               <div>
-                <h1 className="text-4xl font-bold leading-none tracking-tight">
-                  Cash<span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">Pilot</span>
-                </h1>
-                <p className="mt-1.5 text-sm font-semibold text-gray-500">Your money. Your next move.</p>
+                <h1 className="text-4xl font-extrabold leading-none tracking-tight text-logo-green">CashPilot</h1>
+                <p className="mt-1.5 text-sm font-bold uppercase tracking-wide text-logo-blue">Your money. Your next move.</p>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 print:hidden">

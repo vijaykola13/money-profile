@@ -195,3 +195,13 @@
 @media (prefers-reduced-motion: reduce) {
   .bar-grow, .line-draw { animation: none; }
 }
+
+/* Logo colours, taken from the CashPilot artwork */
+@theme {
+  --color-logo-green: #2e9a58;
+  --color-logo-blue: #2a73b3;
+}
+.dark {
+  --color-logo-green: #4cc27a;
+  --color-logo-blue: #6db3ea;
+}

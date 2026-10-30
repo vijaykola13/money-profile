@@ -101,6 +101,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
         </section>
 
         <Card className="lg:col-span-4">
+          <img src="/brand/logo-full.png" alt="CashPilot: Your money. Your next move." width={427} height={472} className="mx-auto mb-4 h-40 w-auto" />
           <CardTitle hint="Everything you load stays in this browser">What you get</CardTitle>
           <ul className="space-y-3 text-sm font-medium text-gray-500">
             {[

@@ -35,6 +35,7 @@ npm run build    # production build into dist/
 - `src/components/dashboard/` — one component per tab
 - `netlify/functions/` — Plaid, Alpaca and optional Claude (`ai-map`, `ai-tag`) functions; keys stay server-side
 - `public/samples/` — sample statement and answer key
+- `public/brand/` — CashPilot logo files (made from the original artwork by `node scripts/make-logo.js`)
 
 ## Known limits
 
