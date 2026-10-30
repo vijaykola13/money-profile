@@ -1,31 +1,13 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Money Profile POC</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <header>
-    <h1>Money Profile <span>POC</span></h1>
-    <p class="banner">Your spending profile, tax estimate and portfolio behavior in one place.</p>
-    <nav id="personas" aria-label="Demo personas"></nav>
-  </header>
-
-  <main>
-    <p id="tagline" class="tagline"></p>
-    <section class="card" id="profile"></section>
-    <section class="card" id="tax"></section>
-    <section class="card" id="portfolio"></section>
-  </main>
-
-  <footer>Estimates for information only; not tax, legal or investment advice.</footer>
-
-  <script src="data/demo.js"></script>
-  <script src="js/tax2025.js"></script>
-  <script src="js/engine.js"></script>
-  <script src="js/app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Profile</title>
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
