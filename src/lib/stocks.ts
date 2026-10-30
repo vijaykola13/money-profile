@@ -124,6 +124,11 @@ export function useStocks(enabled = true) {
       .then((r) => r.json() as Promise<AlpacaPayload>)
       .then((p) => {
         if (cancelled) return;
+        if (p.configured === undefined && p.error) {
+          // The server refused the call (for example the sign-in session), so say so rather than blaming the keys.
+          setError(p.error);
+          return;
+        }
         if (!p.configured) {
           // Keep the sample portfolio, but say why.
           setNotice("Alpaca keys aren't set on this site (ALPACA_KEY_ID, ALPACA_SECRET), so the sample portfolio is shown.");

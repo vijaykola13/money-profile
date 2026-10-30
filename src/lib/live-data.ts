@@ -64,7 +64,11 @@ export function useBankData(enabled = true) {
     setLoading(true);
     setStatus("loading");
     apiFetch("/.netlify/functions/plaid")
-      .then((r) => (r.ok ? (r.json() as Promise<PlaidPayload>) : null))
+      .then(async (r) => {
+        const body = (await r.json().catch(() => null)) as PlaidPayload | null;
+        if (r.ok) return body;
+        return { configured: true, error: body?.error ?? `The bank service answered ${r.status}.` } as PlaidPayload;
+      })
       .then((p) => {
         if (cancelled) return;
         if (!p) return setStatus("error"), setMessage("The bank service could not be reached.");

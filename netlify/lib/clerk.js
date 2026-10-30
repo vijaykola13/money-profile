@@ -10,6 +10,12 @@ const reply = (statusCode, body) => ({
   body: JSON.stringify(body)
 });
 
+// A short reason code (such as "token-expired") helps tell a bad key from a bad session. It reveals no secret.
+function denied(err) {
+  const reason = err && (err.reason || err.code || err.name);
+  return reply(401, { error: 'your session could not be verified, sign in again' + (reason ? ` (${String(reason).slice(0, 60)})` : '') });
+}
+
 function bearer(headers) {
   const h = headers || {};
   const value = h.authorization || h.Authorization;
@@ -21,7 +27,7 @@ function bearer(headers) {
 function makeGuard(env = process.env, verify = verifyToken) {
   return function withAuth(handler) {
     return async (event, context) => {
-      const secretKey = env.CLERK_SECRET_KEY;
+      const secretKey = (env.CLERK_SECRET_KEY || '').trim();
       if (!secretKey && !env.VITE_CLERK_PUBLISHABLE_KEY) return handler(event, context);
       if (!secretKey) return reply(503, { error: 'sign-in is on but CLERK_SECRET_KEY is not set on the server' });
 
@@ -29,9 +35,9 @@ function makeGuard(env = process.env, verify = verifyToken) {
       if (!token) return reply(401, { error: 'sign in to use this' });
       try {
         const { data, errors } = await verify(token, { secretKey });
-        if (errors || !data || !data.sub) return reply(401, { error: 'your session could not be verified, sign in again' });
-      } catch {
-        return reply(401, { error: 'your session could not be verified, sign in again' });
+        if (errors || !data || !data.sub) return denied(errors && errors[0]);
+      } catch (e) {
+        return denied(e);
       }
       return handler(event, context);
     };
