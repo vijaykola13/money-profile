@@ -125,7 +125,7 @@ export function QuickbooksTab() {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
       <div className="grid grid-cols-2 gap-4 md:col-span-2 lg:col-span-12 lg:grid-cols-4">
-        <div className="flex flex-col justify-between rounded-[32px] bg-gradient-to-br from-orange-500 to-orange-400 p-5 text-white shadow-card">
+        <div className="flex flex-col justify-between rounded-[32px] bg-gradient-to-br from-emerald-600 to-emerald-500 p-5 text-white shadow-card">
           <span className="text-sm font-medium text-white/85">Rows to export</span>
           <p className="mt-6 text-3xl font-bold tracking-tight">{summary.count}</p>
           <p className="mt-1 text-xs font-medium text-white/85">of {txns.length} in the file</p>
@@ -173,7 +173,7 @@ export function QuickbooksTab() {
         )}
         {error && <p role="alert" className="mt-3 text-sm font-semibold text-red-500">{error}</p>}
         {issues.map((n) => (
-          <p key={n} className="mt-3 rounded-2xl bg-orange-50 p-3 text-xs font-semibold text-brand">{n}</p>
+          <p key={n} className="mt-3 rounded-2xl bg-amber-50 p-3 text-xs font-semibold text-amber-600">{n}</p>
         ))}
       </Card>
 
@@ -248,7 +248,7 @@ export function QuickbooksTab() {
                     aria-label="Select all"
                     checked={inScope.length > 0 && inScope.every((t) => !excluded.has(t.id))}
                     onChange={(e) => setExcluded(e.target.checked ? new Set() : new Set(inScope.map((t) => t.id)))}
-                    className="size-4 accent-[#FF6B35]"
+                    className="size-4 accent-[#2E9A58]"
                   />
                 </th>
                 <th className="pb-3 font-semibold">Date</th>
@@ -260,7 +260,7 @@ export function QuickbooksTab() {
             <tbody>
               {inScope.slice(0, shown).map((t) => (
                 <tr key={t.id} className="border-t border-gray-100 transition-colors hover:bg-[#F9FAFB]">
-                  <td className="py-3"><input type="checkbox" aria-label={`Include ${t.name}`} checked={!excluded.has(t.id)} onChange={() => toggle(t.id)} className="size-4 accent-[#FF6B35]" /></td>
+                  <td className="py-3"><input type="checkbox" aria-label={`Include ${t.name}`} checked={!excluded.has(t.id)} onChange={() => toggle(t.id)} className="size-4 accent-[#2E9A58]" /></td>
                   <td className="whitespace-nowrap py-3 text-gray-500">{fmtDate(t.date)}</td>
                   <td className="max-w-[260px] truncate py-3 text-ink" title={t.name}>{t.name}</td>
                   <td className={`py-3 font-bold ${t.amount > 0 ? "text-emerald-500" : "text-ink"}`}>{t.amount > 0 ? "+" : "−"}{usd(Math.abs(t.amount), 2)}</td>

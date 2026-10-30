@@ -100,7 +100,7 @@ export function ActivityTable({ model }: { model: Model }) {
                   aria-label="Select all"
                   checked={allPicked}
                   onChange={() => setPicked(allPicked ? new Set() : new Set(visible.map(key)))}
-                  className="size-4 accent-[#FF6B35]"
+                  className="size-4 accent-[#2E9A58]"
                 />
               </th>
               <th className="pb-3 font-semibold">Order ID</th>
@@ -123,7 +123,7 @@ export function ActivityTable({ model }: { model: Model }) {
                       aria-label={`Select ${a.name}`}
                       checked={picked.has(k)}
                       onChange={() => toggle(k)}
-                      className="size-4 accent-[#FF6B35]"
+                      className="size-4 accent-[#2E9A58]"
                     />
                   </td>
                   <td className="py-3 text-ink">#{a.id}</td>

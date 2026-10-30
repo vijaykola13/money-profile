@@ -243,7 +243,7 @@ export function ReconcileTab() {
           </button>
         </div>
         {error && <p role="alert" className="mt-3 text-sm font-semibold text-red-500">{error}</p>}
-        {hint && <p className="mt-3 rounded-2xl bg-orange-50 p-3 text-xs font-semibold text-brand">{hint}</p>}
+        {hint && <p className="mt-3 rounded-2xl bg-blue-50 p-3 text-xs font-semibold text-brand-blue">{hint}</p>}
         <dl className="mt-4 space-y-1.5 text-sm font-medium">
           <div className="flex justify-between"><dt className="text-gray-500">Rows to reconcile</dt><dd className="font-semibold text-ink">{rows.length}</dd></div>
           <div className="flex justify-between"><dt className="text-gray-500">Already reconciled (skipped)</dt><dd className="font-semibold text-ink">{alreadyDone}</dd></div>
@@ -271,7 +271,7 @@ export function ReconcileTab() {
           <div className="flex justify-between"><dt className="text-gray-500">Ticked</dt><dd className="font-semibold text-ink">{ticked.size} of {rows.length}</dd></div>
         </dl>
         <div className="mt-4">
-          <ProgressBar value={ticked.size} max={rows.length} tone={ok ? "#10B981" : "#FF6B35"} label="Transactions ticked" />
+          <ProgressBar value={ticked.size} max={rows.length} tone={ok ? "#10B981" : "#2E9A58"} label="Transactions ticked" />
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" onClick={checkAll} disabled={!rows.length || !!finished} className="inline-flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-50 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-brand">
@@ -337,7 +337,7 @@ export function ReconcileTab() {
             <thead>
               <tr className="text-xs uppercase tracking-wider text-gray-400">
                 <th className="w-8 pb-3">
-                  <input type="checkbox" aria-label="Check all" checked={allTicked} disabled={!rows.length || !!finished} onChange={checkAll} className="size-4 accent-[#FF6B35]" />
+                  <input type="checkbox" aria-label="Check all" checked={allTicked} disabled={!rows.length || !!finished} onChange={checkAll} className="size-4 accent-[#2E9A58]" />
                 </th>
                 <th className="pb-3 font-semibold">Date</th>
                 <th className="pb-3 font-semibold">Name</th>
@@ -349,9 +349,9 @@ export function ReconcileTab() {
               {visible.slice(0, shown).map((r) => {
                 const locked = reconciled.has(r.id);
                 return (
-                  <tr key={r.id} className={`border-t border-gray-100 transition-colors hover:bg-[#F9FAFB] ${ticked.has(r.id) ? "bg-orange-50/40" : ""}`}>
+                  <tr key={r.id} className={`border-t border-gray-100 transition-colors hover:bg-[#F9FAFB] ${ticked.has(r.id) ? "bg-emerald-50/40" : ""}`}>
                     <td className="py-3">
-                      <input type="checkbox" aria-label={`Tick ${r.name} on ${r.date}`} checked={ticked.has(r.id)} disabled={locked} onChange={() => toggle(r.id)} className="size-4 accent-[#FF6B35]" />
+                      <input type="checkbox" aria-label={`Tick ${r.name} on ${r.date}`} checked={ticked.has(r.id)} disabled={locked} onChange={() => toggle(r.id)} className="size-4 accent-[#2E9A58]" />
                     </td>
                     <td className="whitespace-nowrap py-3 text-gray-500">{fmtDate(r.date)}</td>
                     <td className="max-w-[320px] truncate py-3 text-ink" title={r.name}>{r.name}</td>
@@ -360,7 +360,7 @@ export function ReconcileTab() {
                       {locked ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-600"><Lock className="size-3" aria-hidden="true" /> R</span>
                       ) : ticked.has(r.id) ? (
-                        <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-semibold text-brand">Ticked</span>
+                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">Ticked</span>
                       ) : (
                         <span className="text-gray-300">—</span>
                       )}

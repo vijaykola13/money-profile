@@ -44,7 +44,7 @@ function Field({ label, hint, children }: { label: string; hint?: React.ReactNod
 
 function Stat({ title, value, sub, icon, accent = false }: { title: string; value: string; sub: string; icon: React.ReactNode; accent?: boolean }) {
   return (
-    <div className={`flex flex-col justify-between rounded-[32px] p-5 shadow-card ${accent ? "bg-gradient-to-br from-orange-500 to-orange-400 text-white" : "bg-white text-ink"}`}>
+    <div className={`flex flex-col justify-between rounded-[32px] p-5 shadow-card ${accent ? "bg-gradient-to-br from-emerald-600 to-emerald-500 text-white" : "bg-white text-ink"}`}>
       <div className="flex items-center justify-between gap-2">
         <span className={`text-sm font-medium ${accent ? "text-white/85" : "text-gray-500"}`}>{title}</span>
         <span className={`grid size-9 shrink-0 place-items-center rounded-xl ${accent ? "bg-white/20" : "bg-gray-100 text-gray-500"}`}>{icon}</span>
@@ -81,12 +81,12 @@ function SmoothingChart({ months, income, paycheckAmt, pots }: { months: string[
           ))}
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible" role="img" aria-label="Monthly income, steady paycheck and holding pot balance">
             <path d={smooth(incomePts)} fill="none" stroke="var(--chart-ink)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 2" vectorEffect="non-scaling-stroke" />
-            <path d={smooth(potPts)} fill="none" stroke="#FF6B35" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+            <path d={smooth(potPts)} fill="none" stroke="#2E9A58" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
             <path d={smooth(payPts)} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
           </svg>
           {[
             { P: incomePts, vals: income, color: "var(--chart-ink)", name: "Income" },
-            { P: potPts, vals: pots, color: "#FF6B35", name: "Pot" },
+            { P: potPts, vals: pots, color: "#2E9A58", name: "Pot" },
           ].flatMap(({ P: pp, vals, color, name }) =>
             pp.map(([px, py], i) => (
               <button

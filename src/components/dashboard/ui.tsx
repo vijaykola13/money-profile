@@ -64,7 +64,7 @@ export function StatusPill({ status }: { status: "Completed" | "Pending" | "In P
   const tone = {
     Completed: "bg-emerald-50 text-emerald-600",
     Pending: "bg-red-50 text-red-500",
-    "In Progress": "bg-orange-50 text-brand",
+    "In Progress": "bg-amber-50 text-amber-600",
   }[status];
   const dot = { Completed: "bg-emerald-500", Pending: "bg-red-500", "In Progress": "bg-brand" }[status];
   return (

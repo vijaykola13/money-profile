@@ -54,7 +54,7 @@ function SpendingLimit({ model }: { model: Model }) {
         aria-label="Spending against limit"
       >
         <div
-          className={`progress-stripe h-full rounded-full transition-[width] duration-700 ${over ? "bg-red-500" : "bg-[#FF6B35]"}`}
+          className={`progress-stripe h-full rounded-full transition-[width] duration-700 ${over ? "bg-red-500" : "bg-[#2E9A58]"}`}
           style={{ width: `${share}%` }}
         />
       </div>
@@ -65,11 +65,11 @@ function SpendingLimit({ model }: { model: Model }) {
   );
 }
 
-function BankCard({ name, balance, tone }: { name: string; balance: number | null; tone: "dark" | "orange" }) {
+function BankCard({ name, balance, tone }: { name: string; balance: number | null; tone: "dark" | "green" }) {
   return (
     <div
       className={`relative flex h-[170px] w-[280px] shrink-0 snap-start flex-col justify-between rounded-3xl p-5 text-white shadow-card ${
-        tone === "dark" ? "bg-[#18181b]" : "bg-gradient-to-br from-orange-500 to-orange-400"
+        tone === "dark" ? "bg-[#18181b]" : "bg-gradient-to-br from-emerald-600 to-emerald-500"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -80,7 +80,7 @@ function BankCard({ name, balance, tone }: { name: string; balance: number | nul
       <div className="flex items-center justify-between">
         <div className="flex" aria-hidden="true">
           <span className="size-7 rounded-full bg-red-500" />
-          <span className="-ml-3 size-7 rounded-full bg-orange-400/90" />
+          <span className="-ml-3 size-7 rounded-full bg-emerald-300/90" />
         </div>
         <div className="text-right">
           <p className="max-w-[140px] truncate text-xs font-medium opacity-70">{name}</p>
@@ -106,7 +106,7 @@ function MyCards({ model }: { model: Model }) {
       <CardTitle hint={model.live ? "Accounts linked through Plaid" : "Sample cards"}>My Cards</CardTitle>
       <div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-2" tabIndex={0} aria-label="Cards">
         {cards.length ? (
-          cards.map((a, i) => <BankCard key={a.name + i} name={a.name} balance={a.balance} tone={i % 2 ? "orange" : "dark"} />)
+          cards.map((a, i) => <BankCard key={a.name + i} name={a.name} balance={a.balance} tone={i % 2 ? "green" : "dark"} />)
         ) : (
           <p className="text-sm font-medium text-gray-400">No cards linked yet.</p>
         )}

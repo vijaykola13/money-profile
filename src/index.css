@@ -130,8 +130,8 @@
 /* Modern fintech theme */
 @theme {
   --color-canvas: #f5f6f8;
-  --color-brand: #ff6b35;
-  --color-brand-blue: #3b82f6;
+  --color-brand: #2e9a58;
+  --color-brand-blue: #2a73b3;
   --color-ink: #111827;
   --color-zinc-950: #18181b;
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -183,9 +183,11 @@
 /* Pale status pills become soft tints on dark surfaces. */
 .dark .bg-emerald-50 { background-color: rgb(16 185 129 / 0.15); }
 .dark .bg-red-50 { background-color: rgb(239 68 68 / 0.15); }
-.dark .bg-orange-50 { background-color: rgb(255 107 53 / 0.15); }
+.dark .bg-amber-50 { background-color: rgb(245 158 11 / 0.15); }
+.dark .bg-violet-50 { background-color: rgb(139 92 246 / 0.15); }
 .dark .bg-blue-50 { background-color: rgb(59 130 246 / 0.15); }
-.dark .bg-orange-50\/50 { background-color: rgb(255 107 53 / 0.08); }
+.dark .bg-emerald-50\/50 { background-color: rgb(16 185 129 / 0.08); }
+.dark .bg-emerald-50\/40 { background-color: rgb(16 185 129 / 0.08); }
 
 /* Charts */
 @keyframes grow-up { from { transform: scaleY(0); } to { transform: scaleY(1); } }
@@ -204,4 +206,6 @@
 .dark {
   --color-logo-green: #4cc27a;
   --color-logo-blue: #6db3ea;
+  --color-brand: #4cc27a;
+  --color-brand-blue: #6db3ea;
 }

@@ -88,7 +88,7 @@ export function ReportTab() {
           <Donut
             slices={[
               { label: "Business", value: books.tags.business, color: "#3B82F6" },
-              { label: "Personal", value: books.tags.personal, color: "#FF6B35" },
+              { label: "Personal", value: books.tags.personal, color: "#2E9A58" },
             ]}
             centerTop={usd(books.tags.business + books.tags.personal)}
             centerBottom="spending"

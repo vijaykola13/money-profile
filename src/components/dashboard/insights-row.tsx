@@ -5,7 +5,7 @@ import { Card, CardTitle, pct, usd } from "./ui";
 
 const BADGE: Record<string, string> = {
   Saver: "bg-emerald-50 text-emerald-600",
-  Balanced: "bg-orange-50 text-brand",
+  Balanced: "bg-amber-50 text-amber-600",
   Stretched: "bg-red-50 text-red-500",
   Unknown: "bg-gray-100 text-gray-500",
 };

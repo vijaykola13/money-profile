@@ -137,7 +137,7 @@ export default function App() {
           : { state: "live", text: src.kind === "live" ? src.label : `File: ${src.label}` };
 
   return (
-    <div className="min-h-screen bg-canvas bg-[radial-gradient(ellipse_at_top_right,rgba(255,107,53,0.12),transparent_55%),radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.08),transparent_50%)] px-4 py-8 font-sans text-ink transition-colors print:bg-white print:bg-none print:py-2 sm:px-6">
+    <div className="min-h-screen bg-canvas bg-[radial-gradient(ellipse_at_top_right,rgba(46,154,88,0.14),transparent_55%),radial-gradient(ellipse_at_top_left,rgba(42,115,179,0.12),transparent_50%)] px-4 py-8 font-sans text-ink transition-colors print:bg-white print:bg-none print:py-2 sm:px-6">
       <div className="mx-auto max-w-[1320px]">
         <header className="mb-6 print:mb-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
@@ -184,11 +184,11 @@ export default function App() {
                     data.mode === m.id ? "border-brand" : "border-transparent hover:border-gray-200"
                   }`}
                 >
-                  <input type="radio" name="data-mode" value={m.id} checked={data.mode === m.id} onChange={() => chooseMode(m.id)} className="mt-1 size-4 accent-[#FF6B35]" />
+                  <input type="radio" name="data-mode" value={m.id} checked={data.mode === m.id} onChange={() => chooseMode(m.id)} className="mt-1 size-4 accent-[#2E9A58]" />
                   <span>
                     <span className="flex items-center gap-2 text-sm font-semibold text-ink">
                       {m.title}
-                      {m.badge && <span className="rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand">{m.badge}</span>}
+                      {m.badge && <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-blue">{m.badge}</span>}
                     </span>
                     <span className="block text-xs font-medium text-gray-500">{m.body}</span>
                   </span>
@@ -199,9 +199,9 @@ export default function App() {
         </header>
 
         {notice && (
-          <div role="status" className="mb-4 flex items-start justify-between gap-3 rounded-2xl bg-orange-50 px-4 py-3 text-sm font-semibold text-brand print:hidden">
+          <div role="status" className="mb-4 flex items-start justify-between gap-3 rounded-2xl bg-blue-50 px-4 py-3 text-sm font-semibold text-brand-blue print:hidden">
             <span>{notice}</span>
-            <button type="button" onClick={dismissNotice} aria-label="Dismiss" className="shrink-0 rounded-lg p-0.5 hover:bg-orange-100/50 focus-visible:outline-2 focus-visible:outline-brand">
+            <button type="button" onClick={dismissNotice} aria-label="Dismiss" className="shrink-0 rounded-lg p-0.5 hover:bg-blue-100/50 focus-visible:outline-2 focus-visible:outline-brand">
               <X className="size-4" aria-hidden="true" />
             </button>
           </div>

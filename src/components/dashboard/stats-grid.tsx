@@ -19,7 +19,7 @@ function Stat({
   return (
     <div
       className={`flex flex-col justify-between rounded-[32px] p-5 shadow-card ${
-        accent ? "bg-gradient-to-br from-orange-500 to-orange-400 text-white" : "bg-white text-ink"
+        accent ? "bg-gradient-to-br from-emerald-600 to-emerald-500 text-white" : "bg-white text-ink"
       }`}
     >
       <div className="flex items-center justify-between gap-2">

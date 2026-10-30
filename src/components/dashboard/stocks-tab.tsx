@@ -143,7 +143,7 @@ export function StocksTab({
       {(notice || error) && (
         <p
           role="alert"
-          className={`rounded-2xl px-4 py-3 text-sm font-semibold md:col-span-2 lg:col-span-12 ${error ? "bg-red-50 text-red-500" : "bg-orange-50 text-brand"}`}
+          className={`rounded-2xl px-4 py-3 text-sm font-semibold md:col-span-2 lg:col-span-12 ${error ? "bg-red-50 text-red-500" : "bg-amber-50 text-amber-600"}`}
         >
           {error || notice}
         </p>
@@ -173,7 +173,7 @@ export function StocksTab({
                   tabIndex={0}
                   onClick={() => stocks.live && onSymbol(p.symbol)}
                   onKeyDown={(e) => e.key === "Enter" && stocks.live && onSymbol(p.symbol)}
-                  className={`border-t border-gray-100 transition-colors hover:bg-[#F9FAFB] focus-visible:outline-2 focus-visible:outline-brand ${stocks.live ? "cursor-pointer" : ""} ${p.symbol === symbol ? "bg-orange-50/50" : ""}`}
+                  className={`border-t border-gray-100 transition-colors hover:bg-[#F9FAFB] focus-visible:outline-2 focus-visible:outline-brand ${stocks.live ? "cursor-pointer" : ""} ${p.symbol === symbol ? "bg-emerald-50/50" : ""}`}
                 >
                   <td className="py-3 font-bold text-ink">{p.symbol}</td>
                   <td className="py-3 text-ink">{p.qty}</td>

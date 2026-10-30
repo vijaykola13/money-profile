@@ -16,7 +16,7 @@ const CHOICES: Choice[] = ["Not eligible", ...BUCKETS];
 
 const TONE: Record<Bucket, string> = {
   "Home office": "bg-blue-50 text-brand-blue",
-  "Company car": "bg-orange-50 text-brand",
+  "Company car": "bg-violet-50 text-violet-600",
   Medical: "bg-emerald-50 text-emerald-600",
 };
 
@@ -120,7 +120,7 @@ export function AccountableTab() {
   const byBucket = BUCKETS.map((b) => ({
     label: b,
     value: summary.buckets[b],
-    color: b === "Home office" ? "#3B82F6" : b === "Company car" ? "#FF6B35" : "#10B981",
+    color: b === "Home office" ? "#3B82F6" : b === "Company car" ? "#8B5CF6" : "#10B981",
   }));
   const monthly = React.useMemo(() => {
     const totals = new Map<string, number>();
@@ -137,7 +137,7 @@ export function AccountableTab() {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
       <div className="grid grid-cols-2 gap-4 md:col-span-2 lg:col-span-12 lg:grid-cols-4">
-        <div className="flex flex-col justify-between rounded-[32px] bg-gradient-to-br from-orange-500 to-orange-400 p-5 text-white shadow-card">
+        <div className="flex flex-col justify-between rounded-[32px] bg-gradient-to-br from-emerald-600 to-emerald-500 p-5 text-white shadow-card">
           <span className="text-sm font-medium text-white/85">Total reimbursable</span>
           <p className="mt-6 truncate text-3xl font-bold tracking-tight">{usd(summary.total, 2)}</p>
           <p className="mt-1 text-xs font-medium text-white/85">
@@ -191,7 +191,7 @@ export function AccountableTab() {
         <dl className="mt-4 space-y-1.5 text-sm font-medium">
           <div className="flex justify-between"><dt className="text-gray-500">Rows read</dt><dd className="font-semibold text-ink">{read.transactions.length}</dd></div>
           <div className="flex justify-between"><dt className="text-gray-500">Rows skipped</dt><dd className={`font-semibold ${read.skipped.length ? "text-red-500" : "text-ink"}`}>{read.skipped.length}</dd></div>
-          <div className="flex justify-between"><dt className="text-gray-500">Needs review</dt><dd className={`font-semibold ${summary.needsReview ? "text-brand" : "text-ink"}`}>{summary.needsReview}</dd></div>
+          <div className="flex justify-between"><dt className="text-gray-500">Needs review</dt><dd className={`font-semibold ${summary.needsReview ? "text-amber-600" : "text-ink"}`}>{summary.needsReview}</dd></div>
         </dl>
         {read.warnings.map((w) => (
           <p key={w} className="mt-3 flex gap-2 rounded-2xl bg-gray-50 p-3 text-xs font-medium text-gray-500">
@@ -222,7 +222,7 @@ export function AccountableTab() {
         <CardTitle hint={score ? "Checked against the answer key" : "Upload the answer key file to score the result"}>Accuracy</CardTitle>
         {score ? (
           <>
-            <div className={`flex items-center gap-2 rounded-2xl p-3 text-sm font-semibold ${full ? "bg-emerald-50 text-emerald-600" : "bg-orange-50 text-brand"}`}>
+            <div className={`flex items-center gap-2 rounded-2xl p-3 text-sm font-semibold ${full ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
               {full ? <CheckCircle2 className="size-5" aria-hidden="true" /> : <TriangleAlert className="size-5" aria-hidden="true" />}
               {full ? `All ${score.rows} transactions match the key` : `${score.mismatches.length} of ${score.rows} differ from the key`}
             </div>
@@ -308,7 +308,7 @@ export function AccountableTab() {
                   <td className={`py-3 font-bold ${r.amount > 0 ? "text-emerald-500" : "text-ink"}`}>{r.amount > 0 ? "+" : "−"}{usd(Math.abs(r.amount), 2)}</td>
                   <td className="py-3 text-ink">
                     {r.category}
-                    {r.needsReview && <span className="ml-2 rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-brand">Review</span>}
+                    {r.needsReview && <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-600">Review</span>}
                   </td>
                   <td className="py-3">
                     {r.bucket ? (

@@ -2,7 +2,7 @@ import * as React from "react";
 import { smooth } from "@/components/dashboard/income-chart";
 import { usd } from "@/components/dashboard/ui";
 
-export const PALETTE = ["#FF6B35", "#3B82F6", "#10B981", "#8B5CF6", "#EC4899", "#F59E0B", "#14B8A6", "#64748B"];
+export const PALETTE = ["#2E9A58", "#2A73B3", "#8B5CF6", "#F59E0B", "#EC4899", "#14B8A6", "#64748B", "#EF4444"];
 
 /** True one frame after mount, so bars and rings can animate in from zero. */
 function useReady() {
@@ -23,7 +23,7 @@ function niceStep(max: number) {
 const short = (v: number) => (v >= 1000 ? `$${Number.isInteger(v / 1000) ? v / 1000 : (v / 1000).toFixed(1)}k` : `$${v}`);
 
 /** A small smooth line with a soft fill, for the corner of a card. */
-export function Sparkline({ values, color = "#FF6B35", height = 44 }: { values: number[]; color?: string; height?: number }) {
+export function Sparkline({ values, color = "#2E9A58", height = 44 }: { values: number[]; color?: string; height?: number }) {
   const id = React.useId();
   if (values.length < 2) return null;
   const lo = Math.min(...values);
@@ -132,7 +132,7 @@ export function BarsLine({
   barLabel = "Amount",
   line,
   lineLabel = "Target",
-  color = "#FF6B35",
+  color = "#2E9A58",
   lineColor = "#3B82F6",
   height = 240,
 }: {
@@ -239,7 +239,7 @@ export function HBars({ rows, format = (n: number) => usd(n) }: { rows: { label:
 }
 
 /** A thick progress bar with the diagonal stripe from the design. */
-export function ProgressBar({ value, max, tone = "#FF6B35", label }: { value: number; max: number; tone?: string; label?: string }) {
+export function ProgressBar({ value, max, tone = "#2E9A58", label }: { value: number; max: number; tone?: string; label?: string }) {
   const ready = useReady();
   const share = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
   return (

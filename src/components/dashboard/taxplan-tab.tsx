@@ -15,14 +15,14 @@ const inputCls =
 const TONE: Record<string, string> = {
   "On track": "bg-emerald-50 text-emerald-600",
   Covered: "bg-emerald-50 text-emerald-600",
-  Behind: "bg-orange-50 text-brand",
+  Behind: "bg-amber-50 text-amber-600",
   Short: "bg-red-50 text-red-500",
   "No data yet": "bg-gray-100 text-gray-500",
 };
 
 function Stat({ title, value, sub, icon, accent = false }: { title: string; value: string; sub: string; icon: React.ReactNode; accent?: boolean }) {
   return (
-    <div className={`flex flex-col justify-between rounded-[32px] p-5 shadow-card ${accent ? "bg-gradient-to-br from-orange-500 to-orange-400 text-white" : "bg-white text-ink"}`}>
+    <div className={`flex flex-col justify-between rounded-[32px] p-5 shadow-card ${accent ? "bg-gradient-to-br from-emerald-600 to-emerald-500 text-white" : "bg-white text-ink"}`}>
       <div className="flex items-center justify-between gap-2">
         <span className={`text-sm font-medium ${accent ? "text-white/85" : "text-gray-500"}`}>{title}</span>
         <span className={`grid size-9 shrink-0 place-items-center rounded-xl ${accent ? "bg-white/20" : "bg-gray-100 text-gray-500"}`}>{icon}</span>
@@ -97,7 +97,7 @@ export function TaxPlanTab() {
             <input inputMode="decimal" placeholder="e.g. 8,200" value={priorText} onChange={(e) => setPriorText(e.target.value)} className={`mt-1 ${inputCls}`} />
           </label>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-500">
-            <input type="checkbox" checked={over150} onChange={(e) => setOver150(e.target.checked)} className="size-4 accent-[#FF6B35]" />
+            <input type="checkbox" checked={over150} onChange={(e) => setOver150(e.target.checked)} className="size-4 accent-[#2E9A58]" />
             Last year&apos;s income was over $150,000
           </label>
         </div>

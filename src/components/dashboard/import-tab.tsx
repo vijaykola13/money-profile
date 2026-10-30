@@ -256,7 +256,7 @@ export function ImportTab() {
             </div>
 
             {notes.map((n) => (
-              <p key={n} className="mt-3 flex gap-2 rounded-2xl bg-orange-50 p-3 text-xs font-semibold text-brand">
+              <p key={n} className="mt-3 flex gap-2 rounded-2xl bg-amber-50 p-3 text-xs font-semibold text-amber-600">
                 <TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" /> {n}
               </p>
             ))}
@@ -311,7 +311,7 @@ export function ImportTab() {
                 read · {parsed.skipped.length} need review · {parsed.duplicates.length} duplicate{parsed.duplicates.length === 1 ? "" : "s"} skipped
               </p>
             </div>
-            <div className="flex flex-col justify-between rounded-[32px] bg-gradient-to-br from-orange-500 to-orange-400 p-5 text-white shadow-card">
+            <div className="flex flex-col justify-between rounded-[32px] bg-gradient-to-br from-emerald-600 to-emerald-500 p-5 text-white shadow-card">
               <span className="text-sm font-medium text-white/85">Business spending</span>
               <p className="mt-6 truncate text-3xl font-bold tracking-tight">{usd(business, 2)}</p>
               <p className="mt-1 text-xs font-medium text-white/85">{rows.filter((r) => r.info.tag === "Business" && r.amount < 0).length} expenses</p>
@@ -336,7 +336,7 @@ export function ImportTab() {
                   <li key={s.line}><span className="font-semibold text-red-500">Line {s.line}: {s.reason}.</span> <span className="break-all">{s.raw.slice(0, 120)}</span></li>
                 ))}
                 {parsed.duplicates.map((s) => (
-                  <li key={s.line}><span className="font-semibold text-brand">Line {s.line}: exact duplicate, skipped.</span> <span className="break-all">{s.raw.slice(0, 120)}</span></li>
+                  <li key={s.line}><span className="font-semibold text-amber-600">Line {s.line}: exact duplicate, skipped.</span> <span className="break-all">{s.raw.slice(0, 120)}</span></li>
                 ))}
               </ul>
             </Card>
@@ -389,7 +389,7 @@ export function ImportTab() {
                       <td className={`py-3 font-bold ${r.amount > 0 ? "text-emerald-500" : "text-ink"}`}>{r.amount > 0 ? "+" : "−"}{usd(Math.abs(r.amount), 2)}</td>
                       <td className="py-3">
                         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${r.info.tag === "Business" ? "bg-blue-50 text-brand-blue" : "bg-gray-100 text-gray-600"}`}>{r.info.tag}</span>
-                        {r.info.confidence === "low" && <span className="ml-2 rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-brand">Review</span>}
+                        {r.info.confidence === "low" && <span className="ml-2 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-600">Review</span>}
                       </td>
                       <td className="max-w-[300px] truncate py-3 text-gray-500" title={r.info.reason}>{r.info.reason}</td>
                       <td className="py-3 text-xs font-semibold uppercase text-gray-400">{r.info.source}</td>

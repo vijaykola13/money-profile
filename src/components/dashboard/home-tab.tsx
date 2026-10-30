@@ -29,7 +29,7 @@ function Stat({ title, value, sub, icon }: { title: string; value: string; sub: 
     <div className="group flex flex-col justify-between rounded-[32px] bg-white p-5 shadow-card transition duration-300 hover:-translate-y-0.5">
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-medium text-gray-500">{title}</span>
-        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-gray-100 text-gray-500 transition group-hover:bg-orange-50 group-hover:text-brand">{icon}</span>
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-gray-100 text-gray-500 transition group-hover:bg-emerald-50 group-hover:text-brand">{icon}</span>
       </div>
       <p className="mt-6 truncate text-3xl font-bold tracking-tight text-ink">{value}</p>
       <p className="mt-1 text-xs font-medium text-gray-400">{sub}</p>
@@ -81,7 +81,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
   if (!books) {
     return (
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-        <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 p-8 text-white shadow-card lg:col-span-8">
+        <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-600 p-8 text-white shadow-card lg:col-span-8">
           <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
           <div className="pointer-events-none absolute -bottom-20 left-1/3 size-56 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
           <p className="relative text-sm font-semibold uppercase tracking-widest text-white/80">Your money. Your next move.</p>
@@ -111,7 +111,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
               [Sparkles, "Business or personal, with a reason for each"],
             ].map(([Icon, text]) => (
               <li key={text as string} className="flex items-center gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-orange-50 text-brand">
+                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-emerald-50 text-brand">
                   {React.createElement(Icon as typeof Wallet, { className: "size-5", "aria-hidden": true })}
                 </span>
                 {text as string}
@@ -165,7 +165,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
         {error && <p role="alert" className="mt-3 text-sm font-semibold text-red-500">{error}</p>}
       </Card>
 
-      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-orange-500 via-pink-500 to-purple-600 p-7 text-white shadow-card md:col-span-2 lg:col-span-12">
+      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-600 p-7 text-white shadow-card md:col-span-2 lg:col-span-12">
         <div className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
         <div className="relative grid items-end gap-6 lg:grid-cols-[1fr_1.2fr]">
           <div>
@@ -213,7 +213,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
         <Donut
           slices={[
             { label: "Business", value: books.tags.business, color: "#3B82F6" },
-            { label: "Personal", value: books.tags.personal, color: "#FF6B35" },
+            { label: "Personal", value: books.tags.personal, color: "#2E9A58" },
           ]}
           centerTop={usd(books.tags.business + books.tags.personal)}
           centerBottom="total spending"
