@@ -3,6 +3,7 @@ import { AccountableTab } from "@/components/dashboard/accountable-tab";
 import { ActivityTable } from "@/components/dashboard/activity-table";
 import { ImportTab } from "@/components/dashboard/import-tab";
 import { PaycheckTab } from "@/components/dashboard/paycheck-tab";
+import { QuickbooksTab } from "@/components/dashboard/quickbooks-tab";
 import { ReconcileTab } from "@/components/dashboard/reconcile-tab";
 import { BalanceCard } from "@/components/dashboard/balance-card";
 import { IncomeChart } from "@/components/dashboard/income-chart";
@@ -21,6 +22,7 @@ const TABS = [
   { id: "reconcile", label: "Reconcile" },
   { id: "paycheck", label: "Paycheck" },
   { id: "import", label: "Import" },
+  { id: "quickbooks", label: "QuickBooks" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 
@@ -96,6 +98,10 @@ export default function App() {
             <InsightsRow model={model} stock={stocks.data} />
             <Sidebar model={model} />
             <ActivityTable model={model} />
+          </div>
+        ) : tab === "quickbooks" ? (
+          <div role="tabpanel">
+            <QuickbooksTab />
           </div>
         ) : tab === "import" ? (
           <div role="tabpanel">
