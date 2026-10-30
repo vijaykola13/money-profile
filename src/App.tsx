@@ -2,7 +2,7 @@ import * as React from "react";
 import { FinanceBento } from "@/components/ui/finance-bento";
 import { Insights } from "@/components/insights";
 import { AVATAR, demoData, useFonts } from "./demo";
-import { DEMO } from "@/lib/engine";
+import { getDemo } from "@/lib/engine";
 import { buildCashflow, useBankData } from "@/lib/live-data";
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
     () => (plaid ? { ...demoData, cashflow: buildCashflow(plaid.transactions!) } : demoData),
     [plaid],
   );
-  const sample = DEMO.personas.find((p) => p.id === "casey")!;
+  const sample = getDemo().personas.find((p) => p.id === "casey")!;
   const transactions = plaid
     ? plaid.transactions!
     : sample.transactions.map((t) => ({ ...t, date: `${t.month}-01`, name: t.category }));

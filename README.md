@@ -14,16 +14,16 @@ Static site (HTML/CSS/JS, no backend), so it deploys to Netlify as-is.
 ## Run
 
 ```bash
-npm run generate   # regenerate data/demo.js (seeded, deterministic)
+npm run generate   # regenerate data/demo.mjs (seeded, deterministic)
 npm test           # engine tests
 npm start          # serve at http://localhost:3000
 ```
 
 ## Layout
 
-- `js/engine.js` — profile, tax and panic-sell logic (no DOM, unit tested)
-- `js/tax2025.js` — 2025 federal parameters. **Not yet verified against the IRS.**
-- `scripts/generate_data.js` — builds `data/demo.js` (personas, ledger, price series)
+- `js/engine.mjs` — profile, tax and panic-sell logic (no DOM, unit tested)
+- `js/tax2025.mjs` — 2025 federal parameters. **Not yet verified against the IRS.**
+- `scripts/generate_data.js` — builds `data/demo.mjs` (personas, ledger, price series)
 - `js/app.js`, `index.html`, `styles.css` — UI
 
 ## Known limits

@@ -1,8 +1,7 @@
-// Bridges the shared engine (js/engine.js, also used by the tests) into typed TypeScript.
-// The plain-JS files attach themselves to `window` when loaded in the browser.
-import "../../js/engine.js";
-import "../../js/tax2025.js";
-import "../../data/demo.js";
+// Typed access to the shared engine (js/engine.mjs, also used by the tests), tax config and sample data.
+import * as core from "../../js/engine.mjs";
+import TAX from "../../js/tax2025.mjs";
+import demo from "../../data/demo.mjs";
 
 export interface Txn {
   month: string;
@@ -84,14 +83,6 @@ interface DemoData {
   personas: DemoPersona[];
 }
 
-declare global {
-  interface Window {
-    Engine: EngineApi;
-    TAX2025: unknown;
-    DEMO: DemoData;
-  }
-}
-
-export const engine = window.Engine;
-export const TAX2025 = window.TAX2025;
-export const DEMO = window.DEMO;
+export const engine: EngineApi = core;
+export const getTax = (): unknown => TAX;
+export const getDemo = (): DemoData => demo;

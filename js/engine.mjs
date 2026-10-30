@@ -1,6 +1,5 @@
 // Pure logic for the POC: spending profile, federal tax estimate, panic-sell detection.
 // No DOM access, so it runs in the browser and under `node --test`.
-(function (root) {
   const FIXED = ['Rent', 'Utilities', 'Insurance', 'Car payment', 'Debt payment'];
 
   function sum(xs) { return xs.reduce((a, b) => a + b, 0); }
@@ -118,7 +117,4 @@
     return { price, ma50, drawdown, trend, view };
   }
 
-  const api = { profile, estimateTax, detectPanic, signal, bracketTax, FIXED };
-  if (typeof module !== 'undefined') module.exports = api;
-  else root.Engine = api;
-})(typeof window !== 'undefined' ? window : globalThis);
+export { profile, estimateTax, detectPanic, signal, bracketTax, FIXED };

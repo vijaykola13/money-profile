@@ -1,16 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('fs');
-const path = require('path');
-const vm = require('node:vm');
 
-const E = require('../js/engine.js');
-const TAX = require('../js/tax2025.js');
+const E = require('../js/engine.mjs');
+const TAX = require('../js/tax2025.mjs').default;
 
-// data/demo.js assigns window.DEMO; load it in a sandbox.
-const sandbox = { window: {} };
-vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'data', 'demo.js'), 'utf8'), sandbox);
-const DEMO = sandbox.window.DEMO;
+const DEMO = require('../data/demo.mjs').default;
 const persona = id => DEMO.personas.find(p => p.id === id);
 
 test('tax: MFJ wages only matches hand calculation', () => {

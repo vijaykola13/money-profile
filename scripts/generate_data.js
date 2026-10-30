@@ -96,12 +96,12 @@ const personas = [
 ];
 
 const out = {
-  disclaimer: 'Synthetic data for an educational proof of concept. Not real prices, people or accounts.',
+  disclaimer: 'Sample data. Not real prices, people or accounts.',
   ticker: 'DEMO', panicDay, prices, personas
 };
-const file = path.join(__dirname, '..', 'data', 'demo.js');
+const file = path.join(__dirname, '..', 'data', 'demo.mjs');
 fs.mkdirSync(path.dirname(file), { recursive: true });
-fs.writeFileSync(file, 'window.DEMO = ' + JSON.stringify(out) + ';\n');
+fs.writeFileSync(file, 'export default ' + JSON.stringify(out) + ';\n');
 const lo = Math.min(...prices.map(x => x.close)), hi = Math.max(...prices.map(x => x.close));
 console.log(`wrote ${file}`);
 console.log(`days=${prices.length} start=${prices[0].close} low=${lo} high=${hi} end=${prices.at(-1).close} panicDay=${panicDay} (${prices[panicDay].date})`);

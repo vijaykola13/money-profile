@@ -1,4 +1,4 @@
-import { DEMO, TAX2025, engine, type Txn } from "@/lib/engine";
+import { getDemo, getTax, engine, type Txn } from "@/lib/engine";
 import { monthsCovered, type Account } from "@/lib/live-data";
 
 const usd = (n: number) => (n < 0 ? "−" : "") + "$" + Math.abs(Math.round(n)).toLocaleString("en-US");
@@ -35,15 +35,15 @@ export function Insights({ transactions, accounts, live }: { transactions: Txn[]
   // Annualised from the history we have; withholding is unknown, so this is tax before withholding.
   const tax = engine.estimateTax(
     { filingStatus: "single", wages: Math.round((profile.income / months) * 12), withholding: null },
-    TAX2025,
+    getTax(),
   );
   const cash = accounts
     .filter((a) => a.type === "depository" && a.balance != null)
     .reduce((s, a) => s + (a.balance ?? 0), 0);
 
   // Order history comes from the brokerage; until Alpaca is connected, use the sample portfolio.
-  const sample = DEMO.personas.find((p) => p.id === "casey")!;
-  const events = engine.detectPanic(DEMO.prices, sample.trades).filter((e) => e.flagged);
+  const sample = getDemo().personas.find((p) => p.id === "casey")!;
+  const events = engine.detectPanic(getDemo().prices, sample.trades).filter((e) => e.flagged);
 
   return (
     <div className="mx-auto mt-4 grid max-w-[1320px] gap-4 md:grid-cols-2 xl:grid-cols-3">

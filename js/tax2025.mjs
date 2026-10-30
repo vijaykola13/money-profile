@@ -21,5 +21,4 @@ const TAX2025 = {
   seNetFactor: 0.9235
 };
 
-if (typeof module !== 'undefined') module.exports = TAX2025;
-else window.TAX2025 = TAX2025;
+export default TAX2025;
