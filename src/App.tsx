@@ -6,6 +6,7 @@ import { BalanceCard } from "@/components/dashboard/balance-card";
 import { ConnectionsTab } from "@/components/dashboard/connections-tab";
 import { HomeTab } from "@/components/dashboard/home-tab";
 import { ImportTab } from "@/components/dashboard/import-tab";
+import { MortgageTab } from "@/components/dashboard/mortgage-tab";
 import { IncomeChart } from "@/components/dashboard/income-chart";
 import { InsightsRow } from "@/components/dashboard/insights-row";
 import { PaycheckTab } from "@/components/dashboard/paycheck-tab";
@@ -24,7 +25,7 @@ import { useStocks } from "@/lib/stocks";
 import { useTheme } from "@/lib/theme";
 
 type TabId =
-  | "home" | "import" | "reconcile" | "paycheck" | "taxplan" | "accountable" | "quickbooks" | "report"
+  | "home" | "import" | "reconcile" | "paycheck" | "taxplan" | "accountable" | "mortgage" | "quickbooks" | "report"
   | "overview" | "stocks" | "connections";
 
 // The freelancer journey is the front door. These tabs run on an uploaded statement.
@@ -35,6 +36,7 @@ const FILE_TABS: { id: TabId; label: string }[] = [
   { id: "paycheck", label: "Paycheck" },
   { id: "taxplan", label: "Tax planner" },
   { id: "accountable", label: "Accountable plan" },
+  { id: "mortgage", label: "Mortgage" },
   { id: "quickbooks", label: "QuickBooks" },
   { id: "report", label: "Report" },
 ];
@@ -231,6 +233,7 @@ export default function App() {
           {tab === "paycheck" && <PaycheckTab />}
           {tab === "taxplan" && <TaxPlanTab />}
           {tab === "accountable" && <AccountableTab />}
+          {tab === "mortgage" && <MortgageTab />}
           {tab === "quickbooks" && <QuickbooksTab />}
           {tab === "report" && <ReportTab />}
           {tab === "connections" && <ConnectionsTab stocks={stocks} />}

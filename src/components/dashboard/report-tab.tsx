@@ -5,6 +5,7 @@ import { computeBooks } from "@/lib/books";
 import { useData } from "@/lib/data-store";
 import { importer as I, loadLearned } from "@/lib/importer";
 import { loadLog } from "@/lib/quickbooks";
+import { loadMortgage, mortgage } from "@/lib/mortgage";
 import { loadSaved } from "@/lib/reconcile";
 import { Donut } from "@/components/charts";
 import { Card, CardTitle, pct, usd } from "./ui";
@@ -31,6 +32,8 @@ export function ReportTab() {
   const reconciliations = React.useMemo(() => loadSaved().history, []);
   const exports = React.useMemo(() => loadLog(), []);
   const audit = React.useMemo<AuditEvent[]>(() => loadAudit(), []);
+  const mort = React.useMemo(() => loadMortgage(), []);
+  const mortYears = React.useMemo(() => (mort ? mortgage.byYear(mort.rows) : []), [mort]);
 
   if (!books) {
     return (
@@ -123,6 +126,16 @@ export function ReportTab() {
         <Row k="Medical" v={usd(books.plan.buckets.Medical, 2)} />
         <Row k="Total reimbursable" v={`${usd(books.plan.total, 2)} · ${books.plan.eligibleCount} transactions`} />
       </Card>
+
+      {mort && (
+        <Card className={`lg:col-span-6 ${section}`}>
+          <CardTitle hint={`${mort.label}${mort.estimated ? ". Interest is an estimate from your loan details." : ""}`}>Mortgage interest</CardTitle>
+          {mortYears.map((s) => (
+            <Row key={s.year} k={`${s.year}${s.partial ? " (part year)" : ""}`} v={`${usd(s.interest, 2)} interest · ${usd(s.principal, 2)} principal`} />
+          ))}
+          <p className="mt-2 text-xs font-medium text-gray-400">The lender's Form 1098 (box 1) is the figure to file.</p>
+        </Card>
+      )}
 
       <Card className={`lg:col-span-6 ${section}`}>
         <CardTitle hint="Statements ticked to a $0.00 difference and locked">Reconciliations</CardTitle>

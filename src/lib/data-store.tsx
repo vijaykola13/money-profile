@@ -1,3 +1,4 @@
+import { MORTGAGE_KEYS } from "@/lib/mortgage";
 import { scopedStorage } from "@/lib/storage";
 import * as React from "react";
 import { dataset } from "@/lib/dataset";
@@ -81,6 +82,8 @@ function write(key: string, value: unknown) {
 function clearWorkspace() {
   try {
     scopedStorage.removeItem(DATA_KEY);
+    scopedStorage.removeItem(MORTGAGE_KEYS.data);
+    scopedStorage.removeItem(MORTGAGE_KEYS.settings);
   } catch {
     /* ignore */
   }
