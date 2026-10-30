@@ -16,7 +16,7 @@ export interface TagInfo {
   tag: Tag;
   reason: string;
   confidence: "high" | "low";
-  source: "rules" | "ai";
+  source: "rules" | "ai" | "you";
 }
 
 export interface Parsed {
@@ -47,6 +47,27 @@ export const FIELD_LABELS: { key: keyof Mapping; label: string; hint: string }[]
   { key: "credit", label: "Credit", hint: "Money in, if separate" },
   { key: "balance", label: "Balance", hint: "Running balance (ignored)" },
 ];
+
+/* ---------- tags the user taught the app, one per merchant ---------- */
+
+const LEARNED_STORE = "import.learned.v1";
+
+export function loadLearned(): Record<string, Tag> {
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(LEARNED_STORE) ?? "{}") as Record<string, string>;
+    return Object.fromEntries(Object.entries(raw).filter(([, v]) => v === "Business" || v === "Personal")) as Record<string, Tag>;
+  } catch {
+    return {};
+  }
+}
+
+export function saveLearned(learned: Record<string, Tag>) {
+  try {
+    window.localStorage.setItem(LEARNED_STORE, JSON.stringify(learned));
+  } catch {
+    /* storage unavailable: corrections apply to this visit only */
+  }
+}
 
 /* ---------- saved mappings, one per header row ---------- */
 

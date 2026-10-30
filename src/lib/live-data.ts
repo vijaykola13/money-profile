@@ -44,23 +44,38 @@ export function monthsCovered(txns: Txn[]): number {
   return Math.max(1, (Math.max(...times) - Math.min(...times) + DAY) / (30.4 * DAY));
 }
 
-export function useBankData() {
+/** Fetches the linked bank. Pass `enabled = false` to skip the network call (files mode). */
+export function useBankData(enabled = true) {
   const [plaid, setPlaid] = React.useState<PlaidPayload | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(enabled);
+  const [status, setStatus] = React.useState<"off" | "loading" | "connected" | "not-configured" | "error">(enabled ? "loading" : "off");
+  const [message, setMessage] = React.useState("");
 
   React.useEffect(() => {
+    if (!enabled) {
+      setStatus("off");
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
+    setLoading(true);
+    setStatus("loading");
     fetch("/.netlify/functions/plaid")
       .then((r) => (r.ok ? (r.json() as Promise<PlaidPayload>) : null))
       .then((p) => {
-        if (!cancelled && p?.configured && !p.error && p.transactions?.length) setPlaid(p);
+        if (cancelled) return;
+        if (!p) return setStatus("error"), setMessage("The bank service could not be reached.");
+        if (!p.configured) return setStatus("not-configured");
+        if (p.error || !p.transactions?.length) return setStatus("error"), setMessage(p.error ?? "The bank returned no transactions.");
+        setPlaid(p);
+        setStatus("connected");
       })
-      .catch(() => {})
+      .catch(() => !cancelled && (setStatus("error"), setMessage("The bank service could not be reached.")))
       .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [enabled]);
 
-  return { plaid, loading };
+  return { plaid, loading, status, message };
 }

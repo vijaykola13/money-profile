@@ -13,6 +13,8 @@ import {
   type KeyedRow,
   type Saved,
 } from "@/lib/reconcile";
+import { logEvent } from "@/lib/audit";
+import { useData } from "@/lib/data-store";
 import { Card, CardTitle, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -36,6 +38,7 @@ const inputCls =
   "w-full rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-ink focus-visible:outline-2 focus-visible:outline-brand";
 
 export function ReconcileTab() {
+  const data = useData();
   const [saved, setSaved] = React.useState<Saved>(loadSaved);
   const [startText, setStartText] = React.useState(() => String(saved.account.starting));
   const [type, setType] = React.useState<AccountType>(saved.account.type);
@@ -58,6 +61,11 @@ export function ReconcileTab() {
   const [filter, setFilter] = React.useState<(typeof FILTERS)[number]>("All");
   const [shown, setShown] = React.useState(PAGE);
 
+  // In live mode the linked account's balance can stand in for the statement ending balance.
+  const bankBalance =
+    data.mode === "live" && data.accounts.length
+      ? data.accounts.filter((a) => a.type === "depository").reduce((s, a) => s + (a.balance ?? 0), 0)
+      : null;
   const starting = num(startText);
   const ending = num(endText);
   const ready = Number.isFinite(starting) && Number.isFinite(ending) && rows.length > 0;
@@ -90,11 +98,24 @@ export function ReconcileTab() {
     return read;
   };
 
+  // Real statements come from the shared data source; the demos below stay local to this tab.
+  React.useEffect(() => {
+    if (data.source.kind === "none") return;
+    setFileName(data.source.label);
+    setWarnings([]);
+    setSkippedLines(0);
+    setError("");
+    setHint(data.source.kind === "sample" ? 'Sample statement loaded. Use "Demo: balances" to fill in matching balances, or enter your own.' : "");
+    ingest(data.source.transactions, saved.lockedKeys);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.source.csv, data.source.label]);
+
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     if (file.size > MAX_BYTES) return setError("That file is over 5 MB. Export a shorter date range.");
     setHint("");
-    loadText(await file.text(), file.name);
+    const r = await data.ingestRaw(await file.text(), file.name, "file");
+    if (!r.ok) setError(r.error ?? "Couldn't read that file.");
   };
 
   /** Demo: starts at $10,000.00 and the statement ending balance is computed from the full file. */
@@ -147,6 +168,7 @@ export function ReconcileTab() {
     };
     setSaved(next);
     save(next);
+    logEvent("reconcile", `Reconciled ${tickedRows.length} transactions to ${usd(ending, 2)} (${type === "credit" ? "credit card" : "checking"})`);
     setReconciled(new Set(ticked));
     setFinished({ ending, count: tickedRows.length });
   };
@@ -203,6 +225,11 @@ export function ReconcileTab() {
           </Field>
           <Field label="Statement ending balance">
             <input inputMode="decimal" placeholder="e.g. 24,310.55" value={endText} onChange={(e) => setEndText(e.target.value)} disabled={!!finished} className={inputCls} />
+            {bankBalance != null && !finished && (
+              <button type="button" onClick={() => setEndText(bankBalance.toFixed(2))} className="mt-2 text-xs font-semibold text-brand underline">
+                Use live bank balance ({usd(bankBalance, 2)})
+              </button>
+            )}
           </Field>
         </div>
       </Card>

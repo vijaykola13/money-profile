@@ -97,15 +97,20 @@ export function sampleStocks(): StockData {
   };
 }
 
-export function useStocks() {
+/** Fetches the brokerage. Pass `enabled = false` to skip the network call (files mode). */
+export function useStocks(enabled = true) {
   const [symbol, setSymbol] = React.useState<string | null>(null);
   const [data, setData] = React.useState<StockData>(() => sampleStocks());
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(enabled);
   const [error, setError] = React.useState("");
   /** Why the sample portfolio is showing instead of the brokerage, when it is. */
   const [notice, setNotice] = React.useState("");
 
   React.useEffect(() => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     setError("");
@@ -139,7 +144,7 @@ export function useStocks() {
     return () => {
       cancelled = true;
     };
-  }, [symbol]);
+  }, [symbol, enabled]);
 
   return { data, loading, error, notice, symbol, setSymbol };
 }

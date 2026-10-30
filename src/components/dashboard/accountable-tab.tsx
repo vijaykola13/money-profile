@@ -1,6 +1,7 @@
 import * as React from "react";
 import { CheckCircle2, Download, FileUp, FlaskConical, Search, TriangleAlert } from "lucide-react";
 import { accountable, type Bucket, type Choice, type Plan, type Row } from "@/lib/accountable";
+import { useData } from "@/lib/data-store";
 import { Card, CardTitle, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -51,33 +52,31 @@ export function AccountableTab() {
   const [filter, setFilter] = React.useState<(typeof FILTERS)[number]>("All");
   const [shown, setShown] = React.useState(PAGE);
 
-  const loadSample = React.useCallback(async () => {
-    setLoadError("");
-    try {
-      const [input, key] = await Promise.all([fetch(SAMPLE), fetch(SAMPLE_KEY)]);
-      if (!input.ok) throw new Error("sample missing");
-      setText(await input.text());
-      setKeyText(key.ok ? await key.text() : "");
-      setFileName("Sample: US Bank export, Oct 2025 – Sep 2026");
-      setOverrides({});
-    } catch {
-      setLoadError("Couldn't load the sample file.");
-    }
-  }, []);
+  const data = useData();
 
+  // The statement comes from the shared data source, so it is loaded once for every tab.
   React.useEffect(() => {
-    void loadSample();
-  }, [loadSample]);
+    setText(data.source.csv);
+    setFileName(data.source.label);
+    setOverrides({});
+    setShown(PAGE);
+    if (data.source.kind === "sample") {
+      fetch(SAMPLE_KEY).then((r) => (r.ok ? r.text() : "")).then(setKeyText).catch(() => setKeyText(""));
+    } else setKeyText("");
+  }, [data.source.csv, data.source.label, data.source.kind]);
+
+  const loadSample = async () => {
+    setLoadError("");
+    const r = await data.loadSample();
+    if (!r.ok) setLoadError(r.error ?? "Couldn't load the sample file.");
+  };
 
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     if (file.size > MAX_BYTES) return setLoadError("That file is over 5 MB. Export a shorter date range.");
     setLoadError("");
-    setText(await file.text());
-    setKeyText("");
-    setFileName(file.name);
-    setOverrides({});
-    setShown(PAGE);
+    const r = await data.ingestRaw(await file.text(), file.name, "file");
+    if (!r.ok) setLoadError(r.error ?? "Couldn't read that file.");
   };
 
   const read = React.useMemo(() => accountable.readTransactions(text), [text]);

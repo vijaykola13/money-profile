@@ -3,6 +3,8 @@ import { Download, FileUp, FlaskConical, Link2Off, ListChecks, Trash2 } from "lu
 import { importer as I, loadMapping } from "@/lib/importer";
 import { loadLog, quickbooks as Q, saveLog, type DateStyle, type ExportResult, type Layout, type LogEntry } from "@/lib/quickbooks";
 import type { Txn } from "@/lib/reconcile";
+import { logEvent } from "@/lib/audit";
+import { useData } from "@/lib/data-store";
 import { Card, CardTitle, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -38,42 +40,45 @@ export function QuickbooksTab() {
   const inScope = tagged.filter((t) => scope === "All" || (scope === "Business only" ? t.tag === "Business" : t.tag === "Personal"));
   const selected = inScope.filter((t) => !excluded.has(t.id));
 
-  const ingest = (text: string, name: string) => {
-    const table = I.parseCsv(text);
+  const data = useData();
+
+  // Transactions come from the shared data source, so a file loaded anywhere is ready here.
+  React.useEffect(() => {
+    setTxns(data.source.transactions);
+    setFileName(data.source.label);
     setResult(null);
     setExcluded(new Set());
     setShown(PAGE);
-    if (table.length < 2) return setError("That file has no data rows.");
-    const headers = table[0];
-    const rows = table.slice(1);
-    const v = I.validateMapping(headers, rows, loadMapping(headers) ?? I.guessMapping(headers));
-    if (v.errors.length) {
-      setTxns([]);
-      return setError(`Couldn't map the columns: ${v.errors.join(" ")} Use the Import tab to check the mapping first.`);
-    }
-    const parsed = I.applyMapping(rows, v.mapping);
     setError("");
-    setFileName(name);
-    setTxns(parsed.transactions);
-    setIssues([
-      ...v.notes,
-      ...(parsed.skipped.length ? [`${parsed.skipped.length} unreadable row(s) left out. Check them in the Import tab.`] : []),
-      ...(parsed.duplicates.length ? [`${parsed.duplicates.length} exact duplicate row(s) left out.`] : []),
-    ]);
-  };
+  }, [data.source.csv, data.source.label]);
+
+  const readIssues = (r: { notes: string[]; skipped: number; duplicates: number }) => [
+    ...r.notes,
+    ...(r.skipped ? [`${r.skipped} unreadable row(s) left out. Check them in the Import tab.`] : []),
+    ...(r.duplicates ? [`${r.duplicates} exact duplicate row(s) left out.`] : []),
+  ];
 
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     if (file.size > MAX_BYTES) return setError("That file is over 5 MB. Export a shorter date range.");
-    ingest(await file.text(), file.name);
+    const r = await data.ingestRaw(await file.text(), file.name, "file");
+    if (!r.ok) return setError(r.error ?? "Couldn't read that file.");
+    setIssues(readIssues(r));
   };
 
   const loadSample = async (messy: boolean) => {
+    setIssues([]);
+    if (!messy) {
+      const r = await data.loadSample();
+      if (!r.ok) setError(r.error ?? "Couldn't load the sample file.");
+      return;
+    }
     try {
       const res = await fetch(SAMPLE);
       if (!res.ok) throw new Error("missing");
-      const text = await res.text();
-      ingest(messy ? I.makeMessyDemo(text) : text, messy ? "Demo: messy export" : "Sample: US Bank export");
+      const r = await data.ingestRaw(I.makeMessyDemo(await res.text()), "Demo: messy export", "file");
+      if (!r.ok) return setError(r.error ?? "Couldn't read the demo.");
+      setIssues(readIssues(r));
     } catch {
       setError("Couldn't load the sample file.");
     }
@@ -102,6 +107,7 @@ export function QuickbooksTab() {
     const next = [entry, ...log];
     setLog(next);
     saveLog(next);
+    logEvent("export", `Prepared a QuickBooks file: ${out.summary.count} rows, ${scope}`);
   };
 
   const download = (name: string, text: string) => {

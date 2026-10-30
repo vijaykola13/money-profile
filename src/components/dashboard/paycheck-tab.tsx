@@ -4,6 +4,7 @@ import { accountable } from "@/lib/accountable";
 import { engine, getTax } from "@/lib/engine";
 import { paycheck as P } from "@/lib/paycheck";
 import { smooth } from "./income-chart";
+import { useData } from "@/lib/data-store";
 import { Card, CardTitle, pct, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -150,20 +151,25 @@ export function PaycheckTab() {
     setSource({ label, ...by });
   };
 
+  const data = useData();
+
+  // Deposits come from the shared data source once something is loaded; the built-in demo shows until then.
+  React.useEffect(() => {
+    if (data.source.kind === "none") return;
+    fromBank(data.source.csv, data.source.label);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.source.csv, data.source.label]);
+
   const loadSample = async () => {
-    try {
-      const res = await fetch(SAMPLE);
-      if (!res.ok) throw new Error("missing");
-      fromBank(await res.text(), "Sample bank file: deposits only");
-    } catch {
-      setError("Couldn't load the sample file.");
-    }
+    const r = await data.loadSample();
+    if (!r.ok) setError(r.error ?? "Couldn't load the sample file.");
   };
 
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     if (file.size > MAX_BYTES) return setError("That file is over 5 MB. Export a shorter date range.");
-    fromBank(await file.text(), file.name);
+    const r = await data.ingestRaw(await file.text(), file.name, "file");
+    if (!r.ok) setError(r.error ?? "Couldn't read that file.");
   };
 
   const statusOk = sum.shortfalls === 0;

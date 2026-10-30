@@ -6,12 +6,16 @@ import {
   aiMapping,
   aiTags,
   importer as I,
+  loadLearned,
   loadMapping,
+  saveLearned,
   saveMapping,
   type Mapping,
   type Tag,
   type TagInfo,
 } from "@/lib/importer";
+import { logEvent } from "@/lib/audit";
+import { useData } from "@/lib/data-store";
 import { Card, CardTitle, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -40,6 +44,9 @@ export function ImportTab() {
   const [error, setError] = React.useState("");
   const [busy, setBusy] = React.useState("");
   const [ai, setAi] = React.useState(false);
+  const data = useData();
+  // Tags the user has corrected; they beat the rules for that merchant from now on.
+  const [learned, setLearned] = React.useState(loadLearned);
 
   const [aiTagMap, setAiTagMap] = React.useState<Record<string, { tag: Tag; reason: string }>>({});
   const [overrides, setOverrides] = React.useState<Record<number, Tag>>({});
@@ -127,9 +134,12 @@ export function ImportTab() {
   const parsed = React.useMemo(() => (loaded && mapping && errors.length === 0 ? I.applyMapping(loaded.rows, mapping) : null), [loaded, mapping, errors]);
 
   const confirm = () => {
-    if (!loaded || !mapping || errors.length) return;
+    if (!loaded || !mapping || errors.length || !parsed) return;
     saveMapping(loaded.headers, mapping);
     setConfirmed(true);
+    // Every other tab reads this data, so it is loaded once, here.
+    data.publish(parsed.transactions, loaded.fileName, "file");
+    logEvent("mapping", `Confirmed the column mapping for ${loaded.fileName}`);
   };
 
   const rows = React.useMemo(
@@ -139,11 +149,12 @@ export function ImportTab() {
             const auto = I.tagLocal(t);
             const hit = aiTagMap[I.merchantKey(t.name)];
             const base: TagInfo = hit && t.amount < 0 ? { tag: hit.tag, reason: hit.reason, confidence: "high", source: "ai" } : auto;
-            const forced = overrides[id];
-            return { id, ...t, info: forced ? { tag: forced, reason: "Changed by you.", confidence: "high" as const, source: base.source } : base, edited: !!forced };
+            const taught = learned[I.merchantKey(t.name)];
+            const info: TagInfo = taught ? { tag: taught, reason: "Learned from your correction.", confidence: "high", source: "you" } : base;
+            return { id, ...t, info };
           })
         : [],
-    [parsed, confirmed, aiTagMap, overrides],
+    [parsed, confirmed, aiTagMap, learned],
   );
 
   const runAi = async () => {
@@ -203,6 +214,12 @@ export function ImportTab() {
         {busy && <p role="status" className="mt-3 text-sm font-semibold text-brand">{busy}</p>}
         {error && <p role="alert" className="mt-3 text-sm font-semibold text-red-500">{error}</p>}
         <p className="mt-4 rounded-2xl bg-gray-50 p-3 text-xs font-medium text-gray-500">
+          {data.source.kind === "none"
+            ? "Confirming a mapping loads these transactions into every tab."
+            : `In use across the app: ${data.source.label} (${data.source.transactions.length} rows).`}
+          {Object.keys(learned).length > 0 && ` You've taught ${Object.keys(learned).length} merchant tag(s); change a row's override to Automatic to forget one.`}
+        </p>
+        <p className="mt-3 rounded-2xl bg-gray-50 p-3 text-xs font-medium text-gray-500">
           {ai
             ? "AI is on: Claude suggests the column mapping and the tags. Code checks every answer."
             : "AI is off on this site (no ANTHROPIC_API_KEY), so mapping and tags use built-in rules. The same flow runs with AI once the key is added."}
@@ -373,19 +390,20 @@ export function ImportTab() {
                         {r.info.confidence === "low" && <span className="ml-2 rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-brand">Review</span>}
                       </td>
                       <td className="max-w-[300px] truncate py-3 text-gray-500" title={r.info.reason}>{r.info.reason}</td>
-                      <td className="py-3 text-xs font-semibold uppercase text-gray-400">{r.edited ? "You" : r.info.source}</td>
+                      <td className="py-3 text-xs font-semibold uppercase text-gray-400">{r.info.source}</td>
                       <td className="py-3">
                         <select
                           aria-label={`Override tag for ${r.name}`}
-                          value={overrides[r.id] ?? "auto"}
-                          onChange={(e) =>
-                            setOverrides((o) => {
-                              const next = { ...o };
-                              if (e.target.value === "auto") delete next[r.id];
-                              else next[r.id] = e.target.value as Tag;
-                              return next;
-                            })
-                          }
+                          value={learned[I.merchantKey(r.name)] ?? "auto"}
+                          onChange={(e) => {
+                            const key = I.merchantKey(r.name);
+                            const next = { ...learned };
+                            if (e.target.value === "auto") delete next[key];
+                            else next[key] = e.target.value as Tag;
+                            setLearned(next);
+                            saveLearned(next);
+                            logEvent("tag", e.target.value === "auto" ? `Cleared the taught tag for ${key}` : `Taught: ${key} is ${e.target.value}`);
+                          }}
                           className="rounded-xl border-2 border-gray-200 bg-white px-2 py-1 text-xs font-semibold text-ink focus-visible:outline-2 focus-visible:outline-brand"
                         >
                           <option value="auto">Automatic</option>

@@ -199,6 +199,14 @@ export function tagLocal(txn) {
   return { tag: 'Personal', reason: 'No business signal in the merchant name.', confidence: 'low', source: 'rules' };
 }
 
+/** A tag the user taught the app for this merchant wins over the rules; `learned` maps merchant keys to tags. */
+export function applyLearned(info, name, learned) {
+  const hit = learned && learned[merchantKey(name)];
+  return hit === 'Business' || hit === 'Personal'
+    ? { tag: hit, reason: 'Learned from your correction.', confidence: 'high', source: 'you' }
+    : info;
+}
+
 /** Keeps only well-formed AI tags: a known tag and a short one-line reason. */
 export function cleanAiTag(t) {
   if (!t || (t.tag !== 'Business' && t.tag !== 'Personal')) return null;
