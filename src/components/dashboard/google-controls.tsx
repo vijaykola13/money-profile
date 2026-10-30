@@ -35,17 +35,19 @@ export function AccountMenu() {
   );
 }
 
-/** Imports a statement from Google Drive (one chosen file). Renders nothing until Drive is set up. */
+/** Imports a statement from Google Drive (one chosen file). Always shown next to the manual upload. */
 export function DriveImportButton({ onText }: { onText?: (text: string, name: string) => void | Promise<void> }) {
   const data = useData();
   const [busy, setBusy] = React.useState(false);
   const [message, setMessage] = React.useState("");
 
-  if (!driveEnabled) return null;
-
   const run = async () => {
-    setBusy(true);
     setMessage("");
+    if (!driveEnabled) {
+      setMessage("Drive import isn't switched on for this site yet. It needs a Google client ID and API key (see .env.example); until then, upload the file instead.");
+      return;
+    }
+    setBusy(true);
     try {
       const file = await pickDriveFile();
       if (!file) return;
@@ -68,6 +70,7 @@ export function DriveImportButton({ onText }: { onText?: (text: string, name: st
         type="button"
         onClick={() => void run()}
         disabled={busy}
+        title={driveEnabled ? "Choose a CSV or Google Sheet from your Drive" : "Needs Google settings on the server"}
         className="inline-flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-50 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-brand"
       >
         <HardDriveDownload className="size-4" aria-hidden="true" /> {busy ? "Opening Drive…" : "Import from Google Drive"}

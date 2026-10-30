@@ -2,6 +2,7 @@ import * as React from "react";
 import { CheckCircle2, Download, FileUp, FlaskConical, Search, TriangleAlert } from "lucide-react";
 import { accountable, type Bucket, type Choice, type Plan, type Row } from "@/lib/accountable";
 import { useData } from "@/lib/data-store";
+import { DriveImportButton } from "./google-controls";
 import { Card, CardTitle, usd } from "./ui";
 
 const SAMPLE = "/samples/test_accountable_plan_usbank.csv";
@@ -149,6 +150,7 @@ export function AccountableTab() {
             <FileUp className="size-4" aria-hidden="true" /> Upload CSV
             <input type="file" accept=".csv,text/csv" className="sr-only" onChange={(e) => void onFile(e.target.files?.[0])} />
           </label>
+          <DriveImportButton />
           <button
             type="button"
             onClick={() => void loadSample()}
