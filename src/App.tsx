@@ -52,7 +52,13 @@ export default function App() {
             </span>
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-card">
               <span className={`size-2 rounded-full ${dot(stocks.data.live, stocks.loading)}`} />
-              {stocks.loading && !stocks.data.live ? "Loading brokerage…" : stocks.data.sourceLabel}
+              {stocks.loading && !stocks.data.live
+                ? "Loading brokerage…"
+                : stocks.data.live
+                  ? stocks.data.sourceLabel
+                  : stocks.error || stocks.notice
+                    ? "Brokerage not connected"
+                    : stocks.data.sourceLabel}
             </span>
           </div>
         </header>
@@ -85,7 +91,13 @@ export default function App() {
           </div>
         ) : (
           <div role="tabpanel">
-            <StocksTab stocks={stocks.data} loading={stocks.loading} error={stocks.error} onSymbol={stocks.setSymbol} />
+            <StocksTab
+              stocks={stocks.data}
+              loading={stocks.loading}
+              error={stocks.error}
+              notice={stocks.notice}
+              onSymbol={stocks.setSymbol}
+            />
           </div>
         )}
 

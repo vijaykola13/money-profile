@@ -102,16 +102,23 @@ export function useStocks() {
   const [data, setData] = React.useState<StockData>(() => sampleStocks());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
+  /** Why the sample portfolio is showing instead of the brokerage, when it is. */
+  const [notice, setNotice] = React.useState("");
 
   React.useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError("");
+    setNotice("");
     fetch(`/.netlify/functions/alpaca${symbol ? `?symbol=${encodeURIComponent(symbol)}` : ""}`)
       .then((r) => r.json() as Promise<AlpacaPayload>)
       .then((p) => {
         if (cancelled) return;
-        if (!p.configured) return; // keep the sample portfolio
+        if (!p.configured) {
+          // Keep the sample portfolio, but say why.
+          setNotice("Alpaca keys aren't set on this site (ALPACA_KEY_ID, ALPACA_SECRET), so the sample portfolio is shown.");
+          return;
+        }
         if (p.error || !p.bars?.length) {
           setError(p.error ?? `No price data for ${symbol}.`);
           return;
@@ -127,12 +134,12 @@ export function useStocks() {
           account: p.account ?? null,
         });
       })
-      .catch(() => {})
+      .catch(() => !cancelled && setNotice("Couldn't reach the brokerage service, so the sample portfolio is shown."))
       .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
     };
   }, [symbol]);
 
-  return { data, loading, error, symbol, setSymbol };
+  return { data, loading, error, notice, symbol, setSymbol };
 }

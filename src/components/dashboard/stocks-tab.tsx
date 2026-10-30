@@ -98,11 +98,13 @@ export function StocksTab({
   stocks,
   loading,
   error,
+  notice,
   onSymbol,
 }: {
   stocks: StockData;
   loading: boolean;
   error: string;
+  notice: string;
   onSymbol: (s: string) => void;
 }) {
   const [query, setQuery] = React.useState("");
@@ -138,6 +140,14 @@ export function StocksTab({
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12">
+      {(notice || error) && (
+        <p
+          role="alert"
+          className={`rounded-2xl px-4 py-3 text-sm font-semibold md:col-span-2 lg:col-span-12 ${error ? "bg-red-50 text-red-500" : "bg-orange-50 text-brand"}`}
+        >
+          {error || notice}
+        </p>
+      )}
       <div className="grid grid-cols-2 gap-4 md:col-span-2 lg:col-span-12 lg:grid-cols-4">
         <Summary label="Portfolio value" value={usd(equity, 2)} sub={dayChange != null ? `${signed(dayChange, (n) => usd(n, 2))} today` : undefined} subTone={dayChange != null ? tone(dayChange) : undefined} />
         <Summary label="Unrealized P/L" value={signed(totalPl, (n) => usd(n, 2))} sub={`${positions.length} position${positions.length === 1 ? "" : "s"}`} subTone={tone(totalPl)} />
@@ -217,7 +227,6 @@ export function StocksTab({
             </button>
           </form>
         </div>
-        {error && <p role="alert" className="mt-3 rounded-2xl bg-red-50 px-3 py-2 text-sm font-medium text-red-500">{error}</p>}
         <div className={loading ? "opacity-60 transition-opacity" : "transition-opacity"} aria-busy={loading}>
           <PriceChart bars={bars} trades={trades} symbol={symbol} />
         </div>
