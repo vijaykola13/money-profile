@@ -13,7 +13,7 @@ function mapPlaidTransactions(added) {
     const detailed = pfc.detailed || '';
     if (SKIP.has(primary) || !t.date) continue;
     const month = t.date.slice(0, 7);
-    const base = { month, date: t.date, name: t.name || '' };
+    const base = { month, date: t.date, name: t.name || '', id: t.transaction_id || '', pending: !!t.pending };
 
     if (primary === 'INCOME' || t.amount < 0) {
       // Test data sometimes files paychecks under other categories, so also match on the payee name.

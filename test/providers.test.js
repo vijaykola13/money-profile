@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 // Rows also carry date and name; most tests only care about the ledger fields.
-const strip = rows => rows.map(({ date, name, ...r }) => r);
+const strip = rows => rows.map(({ date, name, id, pending, ...r }) => r);
 const { mapPlaidTransactions, mapAlpacaBars, mapAlpacaOrders } = require('../netlify/lib/mappers');
 
 test('plaid: maps categories, signs and skips transfers', () => {

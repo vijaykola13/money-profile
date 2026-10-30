@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { FinanceBentoData } from "@/components/ui/finance-bento";
 import type { Txn } from "@/lib/engine";
 
 export interface Account {
@@ -21,24 +20,21 @@ const DAY = 864e5;
 const fmtDay = (ms: number) =>
   new Date(ms).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 
-/** Splits the transactions' date range into equal buckets of income and spending, in thousands. */
-export function buildCashflow(txns: Txn[], buckets = 6): FinanceBentoData["cashflow"] {
+/** Splits the transactions' date range into equal buckets of income and spending, in dollars. */
+export function bucketSeries(txns: Txn[], buckets = 6) {
   const times = txns.map((t) => Date.parse(t.date));
   const start = Math.min(...times);
   const width = (Math.max(...times) - start + DAY) / buckets;
-  const income = Array<number>(buckets).fill(0);
-  const spending = Array<number>(buckets).fill(0);
+  const profit = Array<number>(buckets).fill(0);
+  const loss = Array<number>(buckets).fill(0);
   for (const t of txns) {
     const i = Math.min(buckets - 1, Math.floor((Date.parse(t.date) - start) / width));
-    (t.type === "income" ? income : spending)[i] += t.amount / 1000;
+    (t.type === "income" ? profit : loss)[i] += t.amount;
   }
-  const round = (xs: number[]) => xs.map((x) => Math.round(x * 100) / 100);
-  const zeros = Array<number>(buckets).fill(0);
   return {
-    months: Array.from({ length: buckets }, (_, i) => fmtDay(start + i * width)),
-    // The chart draws three rows (this year and two earlier); only one period of history exists.
-    income: [round(income), zeros, zeros],
-    spending: [round(spending), zeros, zeros],
+    labels: Array.from({ length: buckets }, (_, i) => fmtDay(start + i * width)),
+    profit: profit.map(Math.round),
+    loss: loss.map(Math.round),
   };
 }
 

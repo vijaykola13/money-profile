@@ -7,6 +7,8 @@ export interface Txn {
   month: string;
   date: string;
   name: string;
+  id?: string;
+  pending?: boolean;
   category: string;
   type: "income" | "expense";
   amount: number;

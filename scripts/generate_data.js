@@ -83,7 +83,7 @@ const personas = [
   {
     id: 'casey', name: 'Casey', tagline: 'Good income, balanced budget, sells into the crash',
     tax: { filingStatus: 'mfj', wages: 108000, selfEmployment: 0, otherIncome: 0, withholding: 12500 },
-    transactions: ledger(7600, 0, {
+    transactions: ledger(7600, 0.07, {
       Rent: 2800, Utilities: 280, Insurance: 380, Groceries: 1000, Dining: 700,
       Transport: 450, Entertainment: 450, Shopping: 600, Subscriptions: 90
     }),
