@@ -19,6 +19,14 @@ test('plaid: maps categories, signs and skips transfers', () => {
   ]);
 });
 
+test('plaid: paycheck miscategorised as food is still income; card payments are not', () => {
+  const rows = mapPlaidTransactions([
+    { date: '2025-03-07', amount: -810, name: 'Acme inc payroll ppd id', personal_finance_category: { primary: 'FOOD_AND_DRINK', detailed: 'FOOD_AND_DRINK_RESTAURANT' } },
+    { date: '2025-03-14', amount: -2835, name: 'Payment Thank You-Mobile', personal_finance_category: { primary: 'LOAN_PAYMENTS', detailed: 'LOAN_PAYMENTS_CREDIT_CARD_PAYMENT' } }
+  ]);
+  assert.deepEqual(rows, [{ month: '2025-03', category: 'Salary', type: 'income', amount: 810 }]);
+});
+
 test('alpaca: bars and orders map onto the price series', () => {
   const prices = mapAlpacaBars([
     { t: '2025-06-16T04:00:00Z', c: 100 }, { t: '2025-06-17T04:00:00Z', c: 90 }, { t: '2025-06-18T04:00:00Z', c: 85 }

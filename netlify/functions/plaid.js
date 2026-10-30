@@ -32,16 +32,18 @@ exports.handler = async () => {
       // Sandbox only: mint a test item without the Link UI. Production needs Link + token storage.
       if (env !== 'sandbox') return json(200, { configured: false, provider: 'plaid', reason: 'no access token' });
       const pt = await plaid(host, '/sandbox/public_token/create', {
-        ...auth, institution_id: 'ins_109508', initial_products: ['transactions']
+        ...auth, institution_id: 'ins_109508', initial_products: ['transactions'],
+        // Plaid's richer test user: longer history with paychecks and recurring bills.
+        options: { override_username: process.env.PLAID_SANDBOX_USER || 'user_transactions_dynamic', override_password: 'pass_good' }
       });
       accessToken = (await plaid(host, '/item/public_token/exchange', { ...auth, public_token: pt.public_token })).access_token;
     }
 
-    // A new item's first sync returns empty with status NOT_READY; poll until history is loaded.
+    // A new item returns empty pages (NOT_READY, then INITIAL_UPDATE_COMPLETE) before history arrives.
     let added = [], cursor, hasMore = true, tries = 0;
     while (hasMore) {
       const page = await plaid(host, '/transactions/sync', { ...auth, access_token: accessToken, cursor, count: 500 });
-      if (page.transactions_update_status === 'NOT_READY' && !page.added.length && tries++ < 6) {
+      if (page.transactions_update_status !== 'HISTORICAL_UPDATE_COMPLETE' && !page.added.length && tries++ < 10) {
         await new Promise(r => setTimeout(r, 2500));
         continue;
       }
