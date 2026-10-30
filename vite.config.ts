@@ -25,7 +25,16 @@ function netlifyFunctions(mode: string): Plugin {
           for (const key of Object.keys(nodeRequire.cache)) {
             if (key.includes(`${path.sep}netlify${path.sep}`)) delete nodeRequire.cache[key];
           }
+          let body = "";
+          if (req.method === "POST") {
+            for await (const chunk of req) {
+              body += chunk;
+              if (body.length > 200_000) break;
+            }
+          }
           const out = await nodeRequire(file).handler({
+            httpMethod: req.method,
+            body,
             queryStringParameters: Object.fromEntries(url.searchParams),
           });
           res.statusCode = out.statusCode;
