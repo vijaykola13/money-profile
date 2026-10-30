@@ -94,6 +94,7 @@ interface Api {
   monthly(rows: Payment[], year: number): Record<"interest" | "principal" | "escrow" | "payment", number[]>;
   pivot(rows: Payment[], metric: Metric): Pivot;
   averageBalance(rows: Payment[], year: number): number | null;
+  interestByMonth(rows: Payment[]): Record<string, number>;
   deduction(input: Partial<DeductionInput> & { interest: number }): Deduction;
 }
 

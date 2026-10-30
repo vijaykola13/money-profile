@@ -141,6 +141,7 @@ function matchDebit(name, plan) {
 }
 
 const round2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const money = n => '$' + n.toFixed(2);
 
 export function classify(txn, plan = DEFAULT_PLAN) {
   const base = { ...txn, category: 'Uncategorized', bucket: null, eligible: false, pct: 0, reimbursable: 0, reason: 'No rule matched; review this one.', note: '', needsReview: true };
@@ -157,10 +158,15 @@ export function classify(txn, plan = DEFAULT_PLAN) {
 
   const pct = m.bucket === 'Home office' ? plan.homeOffice : m.bucket === 'Company car' ? plan.companyCar : m.bucket === 'Medical' ? plan.medical : 0;
   const eligible = !!m.bucket;
+  // With the Mortgage tab's interest for this month, only the interest part of the payment counts.
+  const interest = m.category === 'Mortgage' ? plan.mortgageInterest?.[txn.date.slice(0, 7)] : undefined;
+  const interestOnly = typeof interest === 'number';
+  const basis = interestOnly ? interest : Math.abs(txn.amount);
   return {
-    ...base, category: m.category, bucket: m.bucket, eligible, pct, reason: m.reason,
-    reimbursable: eligible ? round2((Math.abs(txn.amount) * pct) / 100) : 0,
-    note: NOTES[m.category] ?? '', needsReview: m.category === 'Car insurance (unassigned)'
+    ...base, category: m.category, bucket: m.bucket, eligible, pct, base: basis, interestOnly,
+    reason: interestOnly ? `Mortgage interest on the home with the office (${money(interest)} of the ${money(Math.abs(txn.amount))} payment).` : m.reason,
+    reimbursable: eligible ? round2((basis * pct) / 100) : 0,
+    note: interestOnly ? 'Interest only, from the Mortgage tab.' : NOTES[m.category] ?? '', needsReview: m.category === 'Car insurance (unassigned)'
   };
 }
 
@@ -175,7 +181,7 @@ export function applyOverride(row, choice, plan = DEFAULT_PLAN) {
   const pct = choice === 'Home office' ? plan.homeOffice : choice === 'Company car' ? plan.companyCar : plan.medical;
   return {
     ...row, bucket: choice, eligible: row.amount < 0, pct, edited: true, reason: `Marked ${choice} by you.`,
-    reimbursable: row.amount < 0 ? round2((Math.abs(row.amount) * pct) / 100) : 0
+    reimbursable: row.amount < 0 ? round2(((row.base ?? Math.abs(row.amount)) * pct) / 100) : 0
   };
 }
 

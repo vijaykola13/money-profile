@@ -8,6 +8,8 @@ export interface Plan {
   medical: number;
   companyCarInsurers: string[];
   personalCarInsurers: string[];
+  /** Interest paid per month (YYYY-MM) from the Mortgage tab. When set, mortgage rows reimburse interest only. */
+  mortgageInterest?: Record<string, number>;
 }
 
 export interface Row {
@@ -21,6 +23,9 @@ export interface Row {
   /** Business-use percent, 0 to 100. */
   pct: number;
   reimbursable: number;
+  /** The amount the percentage was applied to: the payment, or just its interest. */
+  base?: number;
+  interestOnly?: boolean;
   reason: string;
   note: string;
   needsReview: boolean;

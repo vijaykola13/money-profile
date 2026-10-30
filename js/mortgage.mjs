@@ -227,3 +227,14 @@ export function deduction(input) {
     diff, matches: diff !== null && Math.abs(diff) <= 1
   };
 }
+
+/** Interest paid in each month, keyed 'YYYY-MM'. Used by the accountable plan to reimburse interest only. */
+export function interestByMonth(rows) {
+  const out = {};
+  for (const r of rows) {
+    if (r.interest === null) continue;
+    const k = r.date.slice(0, 7);
+    out[k] = round2((out[k] ?? 0) + r.interest);
+  }
+  return out;
+}

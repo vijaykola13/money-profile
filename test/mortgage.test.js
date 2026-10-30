@@ -140,3 +140,11 @@ test('deduction: compares with the Form 1098 figure', () => {
   assert.equal(off.diff, 1000);
   assert.equal(M.deduction({ interest: 27000, reported1098: '', filing: 'single' }).diff, null);
 });
+
+test('interest by month adds up and ignores payments with no interest', () => {
+  const rows = M.readMortgage(sample('mortgage_payment_history.csv')).rows;
+  const map = M.interestByMonth(rows);
+  assert.equal(Object.keys(map).length, 24);
+  assert.equal(map['2025-10'], rows.find(r => r.date === '2025-10-01').interest);
+  assert.deepEqual(M.interestByMonth([{ date: '2025-01-01', interest: null }]), {});
+});

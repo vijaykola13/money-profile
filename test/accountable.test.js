@@ -73,3 +73,32 @@ test('manual override changes the bucket and the amount', () => {
   assert.equal(edited.edited, true);
   assert.equal(A.applyOverride(edited, 'Not eligible').reimbursable, 0);
 });
+
+test('mortgage: with the Mortgage tab\'s interest, only the interest part is reimbursed', () => {
+  const txn = { date: '2025-10-01', name: 'WEB AUTHORIZED PMT PACIFICA HOME LOANS', amount: -3412.18 };
+  const full = A.classify(txn);
+  assert.equal(full.reimbursable, 511.83);
+  assert.equal(full.interestOnly, false);
+
+  const plan = { ...A.DEFAULT_PLAN, mortgageInterest: { '2025-10': 2294.53 } };
+  const row = A.classify(txn, plan);
+  assert.equal(row.interestOnly, true);
+  assert.equal(row.base, 2294.53);
+  assert.equal(row.reimbursable, 344.18); // 15% of 2,294.53
+  assert.match(row.reason, /interest/i);
+
+  // A month with no interest figure falls back to the full payment, and other rows are untouched.
+  assert.equal(A.classify({ ...txn, date: '2025-11-01' }, plan).reimbursable, 511.83);
+  const water = { date: '2025-10-05', name: 'WATER DEPT', amount: -100 };
+  assert.equal(A.classify(water, plan).reimbursable, A.classify(water).reimbursable);
+
+  // Re-marking the row by hand keeps the interest-only basis.
+  assert.equal(A.applyOverride(row, 'Home office', plan).reimbursable, 344.18);
+});
+
+test('mortgage: the answer-key score is unchanged by the interest link', () => {
+  const txns = A.readTransactions(sample('test_accountable_plan_usbank.csv')).transactions;
+  const a = A.classifyAll(txns, A.DEFAULT_PLAN);
+  const b = A.classifyAll(txns, { ...A.DEFAULT_PLAN, mortgageInterest: undefined });
+  assert.deepEqual(a.map(r => r.reimbursable), b.map(r => r.reimbursable));
+});

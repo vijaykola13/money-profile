@@ -1,4 +1,5 @@
 import * as React from "react";
+import { loadMortgage, mortgage } from "@/lib/mortgage";
 import { CheckCircle2, Download, FileUp, FlaskConical, Search, TriangleAlert } from "lucide-react";
 import { accountable, type Bucket, type Choice, type Plan, type Row } from "@/lib/accountable";
 import { BarsLine, Donut } from "@/components/charts";
@@ -82,11 +83,18 @@ export function AccountableTab() {
   };
 
   const read = React.useMemo(() => accountable.readTransactions(text), [text]);
-  const automatic = React.useMemo(() => accountable.classifyAll(read.transactions, plan), [read, plan]);
+  // Interest-only reimbursement for the mortgage, when the Mortgage tab has the loan's payments.
+  const mort = React.useMemo(() => loadMortgage(), []);
+  const [interestOnly, setInterestOnly] = React.useState(true);
+  const interestMap = React.useMemo(() => (mort ? mortgage.interestByMonth(mort.rows) : undefined), [mort]);
+  const livePlan = React.useMemo<Plan>(() => ({ ...plan, mortgageInterest: interestOnly ? interestMap : undefined }), [plan, interestOnly, interestMap]);
+  const automatic = React.useMemo(() => accountable.classifyAll(read.transactions, livePlan), [read, livePlan]);
   const rows = React.useMemo(
-    () => automatic.map((r) => accountable.applyOverride(r, overrides[r.id] ?? null, plan)),
-    [automatic, overrides, plan],
+    () => automatic.map((r) => accountable.applyOverride(r, overrides[r.id] ?? null, livePlan)),
+    [automatic, overrides, livePlan],
   );
+  const mortgageRows = rows.filter((r) => r.category === "Mortgage");
+  const interestRows = mortgageRows.filter((r) => r.interestOnly).length;
   const summary = React.useMemo(() => accountable.summarize(rows), [rows]);
   // Scored on the automatic result, so edits and plan changes don't distort the accuracy figure.
   const score = React.useMemo(
@@ -213,6 +221,28 @@ export function AccountableTab() {
           <PlanInput label="Company car insurance" value={plan.companyCar} onChange={(n) => setPlan((p) => ({ ...p, companyCar: n }))} />
           <PlanInput label="Medical (doctor, dentist, Rx)" value={plan.medical} onChange={(n) => setPlan((p) => ({ ...p, medical: n }))} />
         </div>
+        {mortgageRows.length > 0 && (
+          <div className="mt-4 rounded-2xl bg-gray-50 p-3 text-sm font-medium text-gray-500">
+            {mort ? (
+              <>
+                <label className="flex items-start gap-2">
+                  <input type="checkbox" checked={interestOnly} onChange={(e) => setInterestOnly(e.target.checked)} className="mt-1 size-4 accent-[#2E9A58]" />
+                  <span>
+                    Reimburse mortgage <span className="font-semibold text-ink">interest only</span>, from the Mortgage tab{mort.estimated ? " (estimate)" : ""}.
+                  </span>
+                </label>
+                <p className="mt-1 text-xs text-gray-400">
+                  {interestOnly ? `Used for ${interestRows} of ${mortgageRows.length} mortgage payments here; the others have no matching month in your mortgage file.` : "Off: the full payment is used."}
+                </p>
+              </>
+            ) : (
+              <>
+                Mortgage rows use the <span className="font-semibold text-ink">full payment</span>. Add your loan on the{" "}
+                <a href="#mortgage" className="font-semibold text-brand underline">Mortgage tab</a> to reimburse interest only.
+              </>
+            )}
+          </div>
+        )}
         <p className="mt-4 text-xs font-medium text-gray-400">
           Company car insurer: {plan.companyCarInsurers.join(", ")}. Personal car insurer (not reimbursed): {plan.personalCarInsurers.join(", ")}.
         </p>
@@ -351,7 +381,7 @@ export function AccountableTab() {
           </button>
         )}
         <p className="mt-4 text-xs font-medium text-gray-400">
-          Assumptions to check with your CPA: the full mortgage payment is used (plans usually reimburse interest only); electric assumes an
+          Assumptions to check with your CPA: {interestRows > 0 ? "only the interest part of the mortgage payment is used" : "the full mortgage payment is used (plans usually reimburse interest only)"}; electric assumes an
           electric-only bill; owner medical costs usually run through a separate §105 / HRA arrangement. Not tax advice.
         </p>
       </Card>
