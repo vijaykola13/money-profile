@@ -64,7 +64,7 @@ function resolve(hash: string, liveNow: boolean): { tab: TabId; live: boolean } 
 }
 
 const MODES: { id: Mode; title: string; body: string; badge?: string }[] = [
-  { id: "files", title: "Upload files", body: "Use a bank CSV. Your file stays in this browser." },
+  { id: "files", title: "Upload files", body: "Use a bank CSV. It is kept in this browser, not on our servers, unless you turn on AI tagging." },
   { id: "live", title: "Connect live", badge: "Advanced", body: "Link a bank and brokerage (sandbox preview). Shows only what live data can support." },
 ];
 

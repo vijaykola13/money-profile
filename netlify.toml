@@ -8,3 +8,14 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# Basic browser protections. A full Content-Security-Policy is not set yet because Clerk and the Google picker
+# load scripts from several hosts; add one once the exact list is confirmed.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000"

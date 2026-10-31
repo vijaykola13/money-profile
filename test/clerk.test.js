@@ -60,3 +60,31 @@ test('a valid token runs the function, and the secret is passed to Clerk', async
   assert.equal(out.statusCode, 200);
   assert.deepEqual(seen, { token: 'tok', opts: { secretKey: 'sk_test_x' } });
 });
+
+test('on a hosted server with no sign-in settings, calls are refused unless allowed on purpose', async () => {
+  const lambda = { AWS_LAMBDA_FUNCTION_NAME: 'plaid' };
+  assert.equal((await makeGuard(lambda, good)(ok)({ headers: {} })).statusCode, 503);
+  assert.equal((await makeGuard({ ...lambda, ALLOW_UNAUTHENTICATED: 'true' }, good)(ok)({ headers: {} })).statusCode, 200);
+  // A developer's machine, or the Netlify CLI, is still open so local work needs no keys.
+  assert.equal((await makeGuard({}, good)(ok)({ headers: {} })).statusCode, 200);
+  assert.equal((await makeGuard({ ...lambda, NETLIFY_DEV: 'true' }, good)(ok)({ headers: {} })).statusCode, 200);
+});
+
+test('a real bank or live brokerage is refused while the connection is shared by everyone', async () => {
+  const { refuseSharedReal } = require('../netlify/lib/shared');
+  assert.equal(refuseSharedReal(false, 'plaid', {}), null);
+  assert.equal(refuseSharedReal(true, 'plaid', {}).statusCode, 403);
+  assert.equal(refuseSharedReal(true, 'plaid', { ALLOW_SHARED_ACCOUNTS: 'true' }), null);
+
+  const saved = { ...process.env };
+  Object.assign(process.env, { PLAID_CLIENT_ID: 'x', PLAID_SECRET: 'y', PLAID_ENV: 'production', ALPACA_KEY_ID: 'x', ALPACA_SECRET: 'y', ALPACA_ENV: 'live' });
+  delete process.env.CLERK_SECRET_KEY;
+  delete process.env.VITE_CLERK_PUBLISHABLE_KEY;
+  try {
+    assert.equal((await require('../netlify/functions/plaid').handler({ headers: {} })).statusCode, 403);
+    assert.equal((await require('../netlify/functions/alpaca').handler({ headers: {}, queryStringParameters: {} })).statusCode, 403);
+  } finally {
+    for (const k of Object.keys(process.env)) if (!(k in saved)) delete process.env[k];
+    Object.assign(process.env, saved);
+  }
+});

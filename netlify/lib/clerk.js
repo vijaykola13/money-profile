@@ -2,7 +2,8 @@
 //
 // Sign-in is on when VITE_CLERK_PUBLISHABLE_KEY (the page's key) or CLERK_SECRET_KEY is set. Then every call needs
 // "Authorization: Bearer <Clerk session token>", and the token is verified with CLERK_SECRET_KEY. If the page key is
-// set but the secret is missing, calls are refused rather than left open. With neither set, nothing is guarded.
+// set but the secret is missing, calls are refused rather than left open. With neither set, calls are only open on a
+// developer's machine; on a hosted server they are refused unless ALLOW_UNAUTHENTICATED=true is set on purpose.
 const { verifyToken } = require('@clerk/backend');
 
 const reply = (statusCode, body) => ({
@@ -23,12 +24,18 @@ function bearer(headers) {
   return m ? m[1] : null;
 }
 
+// Netlify functions run on AWS Lambda, which sets these. A local dev server or the Netlify CLI does not.
+const hosted = env => !!(env.AWS_LAMBDA_FUNCTION_NAME || env.LAMBDA_TASK_ROOT || env.NETLIFY === 'true') && env.NETLIFY_DEV !== 'true';
+
 /** `env` and `verify` are parameters so tests can run without Clerk. */
 function makeGuard(env = process.env, verify = verifyToken) {
   return function withAuth(handler) {
     return async (event, context) => {
       const secretKey = (env.CLERK_SECRET_KEY || '').trim();
-      if (!secretKey && !env.VITE_CLERK_PUBLISHABLE_KEY) return handler(event, context);
+      if (!secretKey && !env.VITE_CLERK_PUBLISHABLE_KEY) {
+        if (hosted(env) && env.ALLOW_UNAUTHENTICATED !== 'true') return reply(503, { error: 'sign-in is not configured on this server, so requests are refused' });
+        return handler(event, context);
+      }
       if (!secretKey) return reply(503, { error: 'sign-in is on but CLERK_SECRET_KEY is not set on the server' });
 
       const token = bearer(event && event.headers);
@@ -45,4 +52,4 @@ function makeGuard(env = process.env, verify = verifyToken) {
   };
 }
 
-module.exports = { withAuth: makeGuard(), makeGuard, bearer };
+module.exports = { withAuth: makeGuard(), makeGuard, bearer, hosted };

@@ -1,3 +1,4 @@
+import { aiConsentGiven } from "@/lib/ai-consent";
 import { apiFetch } from "@/lib/auth";
 import { scopedStorage } from "@/lib/storage";
 import * as core from "../../js/importer.mjs";
@@ -106,6 +107,8 @@ export async function aiConfigured(): Promise<boolean> {
 }
 
 async function post<T>(fn: string, body: unknown): Promise<T> {
+  // Defence in depth: nothing leaves the browser for AI unless the person turned it on.
+  if (!aiConsentGiven()) throw new Error("AI is off. Turn it on in the Import tab first.");
   const r = await apiFetch(`/.netlify/functions/${fn}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
   const out = (await r.json()) as T & { error?: string };
   if (!r.ok || out.error) throw new Error(out.error ?? `Request failed (${r.status})`);

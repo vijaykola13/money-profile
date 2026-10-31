@@ -255,7 +255,7 @@ export function MortgageTab() {
           </button>
           <p className="mt-4 flex gap-2 rounded-2xl bg-gray-50 p-3 text-xs font-medium text-gray-500">
             <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-            Your lender's Form 1098 (box 1) is the official interest figure. Your file stays in this browser.
+            Your lender's Form 1098 (box 1) is the official interest figure. Your file is kept in this browser, not on our servers.
           </p>
         </Card>
       </div>

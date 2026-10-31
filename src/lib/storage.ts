@@ -19,6 +19,16 @@ export function setStorageUser(user: SessionUser | null) {
   PREFIX = user ? `u:${user.id}:` : "";
 }
 
+/** Removes everything this account saved in this browser. Used on sign-out so a shared computer keeps nothing. */
+export function wipeUserData(id: string) {
+  try {
+    const prefix = `u:${id}:`;
+    for (const k of Object.keys(window.localStorage)) if (k.startsWith(prefix)) window.localStorage.removeItem(k);
+  } catch {
+    /* blocked storage: nothing to remove */
+  }
+}
+
 export const scopedStorage = {
   getItem: (key: string) => window.localStorage.getItem(PREFIX + key),
   setItem: (key: string, value: string) => window.localStorage.setItem(PREFIX + key, value),

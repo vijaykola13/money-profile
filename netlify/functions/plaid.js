@@ -1,6 +1,7 @@
 // Bank data via Plaid. Defaults to the Sandbox environment; set PLAID_ENV=production
 // (and production keys) when going live. Secrets stay server-side.
 const { withAuth } = require('../lib/clerk');
+const { refuseSharedReal } = require('../lib/shared');
 const { mapPlaidTransactions } = require('../lib/mappers');
 
 const HOSTS = { sandbox: 'https://sandbox.plaid.com', production: 'https://production.plaid.com' };
@@ -25,6 +26,8 @@ exports.handler = withAuth(async () => {
 
   const host = HOSTS[env];
   if (!host) return json(500, { configured: true, error: `unknown PLAID_ENV "${env}"` });
+  const shared = refuseSharedReal(env !== 'sandbox', 'plaid');
+  if (shared) return shared;
   const auth = { client_id: PLAID_CLIENT_ID, secret: PLAID_SECRET };
 
   try {

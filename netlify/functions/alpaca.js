@@ -1,6 +1,7 @@
 // Market data, positions and order history via Alpaca. Defaults to the paper-trading account;
 // set ALPACA_ENV=live (and live keys) to go to production. Secrets stay server-side.
 const { withAuth } = require('../lib/clerk');
+const { refuseSharedReal } = require('../lib/shared');
 const {
   mapAlpacaBars, mapAlpacaBarsFull, mapAlpacaOrders, mapAlpacaPositions, mapAlpacaAccount, mapOrderRows
 } = require('../lib/mappers');
@@ -17,6 +18,8 @@ exports.handler = withAuth(async (event) => {
   const env = process.env.ALPACA_ENV || 'paper';
   if (!ALPACA_KEY_ID || !ALPACA_SECRET) return json(200, { configured: false, provider: 'alpaca' });
   if (!TRADING[env]) return json(500, { configured: true, error: `unknown ALPACA_ENV "${env}"` });
+  const shared = refuseSharedReal(env === 'live', 'alpaca');
+  if (shared) return shared;
 
   const requested = ((event.queryStringParameters || {}).symbol || '').toUpperCase();
   if (requested && !/^[A-Z.]{1,6}$/.test(requested)) return json(400, { error: 'invalid symbol' });

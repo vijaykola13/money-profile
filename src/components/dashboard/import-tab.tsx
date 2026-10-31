@@ -1,4 +1,5 @@
 import * as React from "react";
+import { aiConsentGiven, setAiConsent } from "@/lib/ai-consent";
 import { Download, FileUp, FlaskConical, Search, Sparkles, TriangleAlert } from "lucide-react";
 import {
   FIELD_LABELS,
@@ -45,6 +46,8 @@ export function ImportTab() {
   const [error, setError] = React.useState("");
   const [busy, setBusy] = React.useState("");
   const [ai, setAi] = React.useState(false);
+  const [consent, setConsent] = React.useState(aiConsentGiven);
+  const aiOn = ai && consent;
   const data = useData();
   // Tags the user has corrected; they beat the rules for that merchant from now on.
   const [learned, setLearned] = React.useState(loadLearned);
@@ -78,7 +81,7 @@ export function ImportTab() {
     if (saved) {
       chosen = saved;
       from = "Saved";
-    } else if (ai) {
+    } else if (aiOn) {
       try {
         setBusy("Asking AI to map the columns…");
         const suggestion = await aiMapping(file.headers, file.rows);
@@ -222,10 +225,30 @@ export function ImportTab() {
           {Object.keys(learned).length > 0 && ` You've taught ${Object.keys(learned).length} merchant tag(s); change a row's override to Automatic to forget one.`}
         </p>
         <p className="mt-3 rounded-2xl bg-gray-50 p-3 text-xs font-medium text-gray-500">
-          {ai
-            ? "AI is on: Claude suggests the column mapping and the tags. Code checks every answer."
-            : "AI is off on this site (no ANTHROPIC_API_KEY), so mapping and tags use built-in rules. The same flow runs with AI once the key is added."}
+          {!ai
+            ? "AI is off on this site (no ANTHROPIC_API_KEY), so mapping and tags use built-in rules. The same flow runs with AI once the key is added."
+            : consent
+              ? "AI is on: Claude suggests the column mapping and the tags, and code checks every answer."
+              : "AI is available but off. Mapping and tags use built-in rules, and nothing is sent anywhere."}
         </p>
+        {ai && (
+          <div className="mt-3 rounded-2xl border-2 border-gray-200 p-3 text-xs font-medium text-gray-500">
+            <p>
+              <span className="font-semibold text-ink">What turning AI on shares.</span> Merchant names from your file go to Anthropic, the AI provider, to be tagged, and when a
+              file's columns are new, its column headings and first three rows go too. Amounts and dates are not sent for tagging. Your file is otherwise kept in this browser.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setAiConsent(!consent);
+                setConsent(!consent);
+              }}
+              className="mt-2 rounded-xl bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            >
+              {consent ? "Turn AI off" : "I understand, turn AI on"}
+            </button>
+          </div>
+        )}
       </Card>
 
       <Card className="min-w-0 md:col-span-1 lg:col-span-8">
@@ -349,8 +372,8 @@ export function ImportTab() {
                 <button
                   type="button"
                   onClick={() => void runAi()}
-                  disabled={!ai || !!busy}
-                  title={ai ? "Tag every merchant with Claude" : "Add ANTHROPIC_API_KEY on the server to enable"}
+                  disabled={!aiOn || !!busy}
+                  title={aiOn ? "Tag every merchant with Claude" : ai ? "Turn on AI above first" : "Add ANTHROPIC_API_KEY on the server to enable"}
                   className="inline-flex items-center gap-2 rounded-2xl bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                 >
                   <Sparkles className="size-4" aria-hidden="true" /> Tag with AI

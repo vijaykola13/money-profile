@@ -102,7 +102,7 @@ export function HomeTab({ go }: { go: (tab: string) => void }) {
 
         <Card className="lg:col-span-4">
           <img src="/brand/logo-full.png" alt="CashPilot: Your money. Your next move." width={427} height={472} className="mx-auto mb-4 h-40 w-auto" />
-          <CardTitle hint="Everything you load stays in this browser">What you get</CardTitle>
+          <CardTitle hint="Your files are kept in this browser, not on our servers. Clear them on a shared computer.">What you get</CardTitle>
           <ul className="space-y-3 text-sm font-medium text-gray-500">
             {[
               [ShieldCheck, "Reconcile to $0.00 and lock the statement"],
