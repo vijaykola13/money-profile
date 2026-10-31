@@ -34,6 +34,8 @@ function makeGuard(env = process.env, verify = verifyToken) {
       const secretKey = (env.CLERK_SECRET_KEY || '').trim();
       if (!secretKey && !env.VITE_CLERK_PUBLISHABLE_KEY) {
         if (hosted(env) && env.ALLOW_UNAUTHENTICATED !== 'true') return reply(503, { error: 'sign-in is not configured on this server, so requests are refused' });
+        // Open only on a developer's machine (or on purpose): a stand-in user, never a real one.
+        event.userId = event.userId ?? (hosted(env) ? null : 'dev-user');
         return handler(event, context);
       }
       if (!secretKey) return reply(503, { error: 'sign-in is on but CLERK_SECRET_KEY is not set on the server' });
@@ -44,6 +46,8 @@ function makeGuard(env = process.env, verify = verifyToken) {
         // @clerk/backend returns the token's claims when it is valid and throws when it is not.
         const claims = await verify(token, { secretKey });
         if (!claims || !claims.sub) return denied();
+        // Set only from the verified token, so a caller cannot choose whose data a function reads.
+        event.userId = claims.sub;
       } catch (e) {
         return denied(e);
       }

@@ -5,6 +5,7 @@ import type { useStocks } from "@/lib/stocks";
 import { authEnabled } from "@/lib/auth";
 import { driveEnabled } from "@/lib/google";
 import { currentUser } from "@/lib/storage";
+import { BankSourceCard } from "./bank-source-card";
 import { Card, usd } from "./ui";
 
 type Stocks = ReturnType<typeof useStocks>;
@@ -81,9 +82,11 @@ export function ConnectionsTab({ stocks }: { stocks: Stocks }) {
             : "Live mode is on, but no bank is linked yet, so there is nothing to show. Connect a bank below."}
         </p>
         <p className="mt-2 text-xs font-medium text-gray-400">
-          These run on sandbox test accounts shared by everyone who opens this site. Per-user connections need sign-in, which is on the roadmap.
+          Every account starts on test data. The brokerage below is a shared paper-trading test account; linking your own brokerage is not available yet.
         </p>
       </Card>
+
+      <BankSourceCard />
 
       <Service
         name="Bank (Plaid)"

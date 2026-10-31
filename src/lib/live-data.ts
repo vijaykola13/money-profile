@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/auth";
+import type { BankSource } from "@/lib/bank-source";
 import * as React from "react";
 import type { Txn } from "@/lib/engine";
 
@@ -11,6 +12,8 @@ export interface Account {
 
 export interface PlaidPayload {
   configured: boolean;
+  source?: "test" | "own";
+  linked?: boolean;
   env?: string;
   error?: string;
   transactions?: Txn[];
@@ -46,7 +49,7 @@ export function monthsCovered(txns: Txn[]): number {
 }
 
 /** Fetches the linked bank. Pass `enabled = false` to skip the network call (files mode). */
-export function useBankData(enabled = true) {
+export function useBankData(enabled = true, source: BankSource = "test") {
   const [plaid, setPlaid] = React.useState<PlaidPayload | null>(null);
   const [loading, setLoading] = React.useState(enabled);
   const [status, setStatus] = React.useState<"off" | "loading" | "connected" | "not-configured" | "error">(enabled ? "loading" : "off");
@@ -63,7 +66,9 @@ export function useBankData(enabled = true) {
     let cancelled = false;
     setLoading(true);
     setStatus("loading");
-    apiFetch("/.netlify/functions/plaid")
+    setMessage("");
+    setPlaid(null); // never show one source's data while another loads
+    apiFetch(`/.netlify/functions/plaid?source=${source}`)
       .then(async (r) => {
         const body = (await r.json().catch(() => null)) as PlaidPayload | null;
         if (r.ok) return body;
@@ -73,6 +78,7 @@ export function useBankData(enabled = true) {
         if (cancelled) return;
         if (!p) return setStatus("error"), setMessage("The bank service could not be reached.");
         if (!p.configured) return setStatus("not-configured");
+        if (p.linked === false) return setStatus("not-configured"), setMessage(p.error ?? "No bank is linked yet.");
         if (p.error || !p.transactions?.length) return setStatus("error"), setMessage(p.error ?? "The bank returned no transactions.");
         setPlaid(p);
         setStatus("connected");
@@ -82,7 +88,7 @@ export function useBankData(enabled = true) {
     return () => {
       cancelled = true;
     };
-  }, [enabled]);
+  }, [enabled, source]);
 
   return { plaid, loading, status, message };
 }

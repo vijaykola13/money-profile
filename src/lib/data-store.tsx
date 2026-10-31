@@ -4,6 +4,7 @@ import * as React from "react";
 import { dataset } from "@/lib/dataset";
 import { clearAudit, logEvent } from "@/lib/audit";
 import { importer as I, loadMapping } from "@/lib/importer";
+import { useBankSource } from "@/lib/bank-source";
 import { useBankData, type Account, type PlaidPayload } from "@/lib/live-data";
 import { saveLog } from "@/lib/quickbooks";
 import { clearSaved, type Txn } from "@/lib/reconcile";
@@ -104,12 +105,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return build(saved.kind, saved.label, dataset.fromCanonicalCsv(saved.csv));
   });
 
-  const { plaid, loading: bankLoading, status: bankStatus, message: bankMessage } = useBankData(mode === "live");
+  const [bankSource] = useBankSource();
+  const { plaid, loading: bankLoading, status: bankStatus, message: bankMessage } = useBankData(mode === "live", bankSource);
 
   const live = React.useMemo<Source | null>(() => {
     if (mode !== "live" || !plaid?.transactions?.length) return null;
     const txns: Txn[] = plaid.transactions.map((t) => ({ date: t.date, name: t.name, amount: t.amount }));
-    return build("live", `Live: Plaid ${plaid.env ?? "sandbox"}`, txns);
+    return build("live", plaid.source === "own" ? `Live: your bank (${plaid.env ?? "sandbox"})` : "Live: Plaid test bank", txns);
   }, [mode, plaid]);
 
   // In live mode only live data is shown.
